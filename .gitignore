@@ -1,0 +1,36 @@
+.DS_Store
+node_modules
+/dist
+/types
+
+# local env files
+.env.local
+.env.*.local
+
+# Log files
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Editor directories and files
+.idea
+.vscode
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+/deploy/source
+/deploy/*.zip
+demos/demos.zip
+demos/iframe-poster/iframe-poster.zip
+demos/iframe-poster/iframe-poster.zip
+demos/datachannel/datachannel.zip
+demos/iframe-poster/iframe-poster.zip
+/demos/datachannel-render-server/source/cloudlark
+demos/datachannel-render-server/datachannel-render-server.zip
+/sample-plain-html-voiceoutput
+
+# zip file
+*.zip

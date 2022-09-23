@@ -1,0 +1,11 @@
+body {
+    margin: 0;
+    padding: 0;
+}
+.kd-video-player {
+    width: 960px;
+    height: 480px;
+    margin: 50px 50px;
+    position: relative;
+    z-index: 0;
+}

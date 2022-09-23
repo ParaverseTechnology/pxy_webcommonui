@@ -1,0 +1,40 @@
+{ 
+    "compilerOptions": {
+      "types": ["node", "svelte"], // < -- -- -- -- -- --ADD "node"
+      "outDir": "./dist/", //指定输出文件夹
+      "sourceMap": true, //编译时是否生成.map文件
+      "removeComments": false, //删除所有注释，除了以 /!*开头的版权信息。
+      "noImplicitAny": true, // 没有为值设置明确的类型时，设为false：编译器会默认认为值为any，设为true：报错
+      "declaration": true, // 是否生成 .d.ts声明文件
+      "declarationDir": "./types/", // 声明文件打包的位置
+      "target": "es2017",  //编译后的js应遵循的js版本
+      "allowJs": true,  //是否允许编译js文件
+      "allowSyntheticDefaultImports": true, //允许模块默认导入
+      "esModuleInterop": true, //未导入内容创建空间命名，实现commonjs和es模块的互操作性
+      "moduleResolution": "node", //模块解析策略：node/classic,
+      "downlevelIteration": true,
+      "strict": true,
+      "importHelpers": true,
+      "experimentalDecorators": true,
+      "forceConsistentCasingInFileNames": true,
+      "skipLibCheck": true,
+      "jsx": "react",   //使用前不许转换，输出文件扩展名.js
+      "lib": [
+        "esnext",
+        "dom",
+        "dom.iterable",
+        "scripthost"
+      ],
+      "baseUrl": ".",
+      "paths": {
+        "@/*": [
+          "src/*"
+        ]
+      },
+      "plugins": [{
+        "name": "typescript-svelte-plugin"
+      }]
+    },
+    "include": ["./src/**/*","./index.ts","./typings.d.ts"], //指定编译的路径，支持文件夹、通配符等
+    "exclude": ["node_modules"], //要排除的，不编译的文件，规则同include
+}

@@ -1,0 +1,65 @@
+{
+  "name": "pxy_webcommonui",
+  "version": "0.1.0",
+  "description": "common ui components for pxy cloudrending.",
+  "keywords": [
+    "pingxingyun",
+    "larksr",
+    "cloudrendeing",
+    "webrtc",
+    "cloudxr",
+    "pixelstreaming"
+  ],
+  "main": "./dist/pxy_webcommonui.js",
+  "types": "./types/index.d.ts",
+  "files": [
+    "dist",
+    "types",
+    "doc,"
+  ],
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "webpack-dev-server --config webpack.config.dev.js",
+    "build": "webpack --config webpack.config.js",
+    "build:typings": "tsc --build tsconfig.type.json",
+    "copy-dts": "copyfiles -u 1 \"src/**/*.d.ts\" dist/types/",
+    "dist": "webpack --config webpack.config.js && copyfiles -u 1 \"src/**/*.d.ts\" ./types/ && copyfiles -u 1 \"doc/*\" dist/doc/ && copyfiles -u 1 \"types/**/*.d.ts\" ./dist/types/ && copyfiles -u 1 \"dist/*\" ./sample-plain-html/source/dist/"
+  },
+  "author": "fcx@pingxingyun.com",
+  "license": "ISC",
+  "dependencies": {
+    "core-js": "^3.18.1"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.15.5",
+    "@tsconfig/svelte": "^2.0.1",
+    "@types/crypto-js": "^4.0.2",
+    "@types/webrtc": "^0.0.30",
+    "babel-loader": "^8.2.2",
+    "clean-webpack-plugin": "^4.0.0",
+    "css-loader": "^6.3.0",
+    "fork-ts-checker-webpack-plugin": "^6.3.3",
+    "html-loader": "^3.0.1",
+    "html-webpack-plugin": "^5.3.2",
+    "less-loader": "^10.0.1",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "sass": "^1.43.4",
+    "scss": "^0.2.4",
+    "style-loader": "^3.3.0",
+    "svelte": "^3.44.1",
+    "svelte-check": "^2.2.10",
+    "svelte-loader": "^3.1.2",
+    "svelte-preprocess": "^4.9.8",
+    "terser-webpack-plugin": "^5.2.5",
+    "ts-loader": "^9.2.6",
+    "typescript": "^4.4.3",
+    "typescript-svelte-plugin": "^0.2.5",
+    "url-loader": "^4.1.1",
+    "vconsole": "^3.12.1",
+    "webpack": "^5.54.0",
+    "webpack-cli": "^4.8.0",
+    "webpack-dev-server": "^4.3.0",
+    "larksr_websdk": "^3.2.329"
+  }
+}

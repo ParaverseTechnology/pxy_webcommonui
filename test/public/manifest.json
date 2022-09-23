@@ -1,0 +1,11 @@
+{
+  "short_name": "CloudLark3.0",
+  "name": "CloudLark3.0 Web Client",
+  "icons": [
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "orientation":  "portrait",
+  "theme_color": "#000000",
+  "background_color": "#ffffff"
+}
