@@ -31,7 +31,7 @@ export interface LogObserver {
 export default class Log {
     public static get logLevel() { return this._logLevel; }
     public static set logLevel(level: string) { this._logLevel = level.toUpperCase(); }
-    static _logLevel = Level.INFO;
+    static _logLevel = Level.WARN;
 
     static info(...info: any[]) {
         this.log(Level.INFO, ...info);

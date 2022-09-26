@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="format-detection" content="telephone=no, email=no" />
+    <meta name="screen-orientation" content="portrait">
+    <meta name="x5-orientation" content="portrait">
+    <meta name="full-screen" content="yes">
+    <meta name="x5-fullscreen" content="true">
+    <meta name="browsermode" content="application">
+    <meta name="x5-page-mode" content="app">
+    <meta name="msapplication-tap-highlight" content="no">
+    <meta name="HandheldFriendly" content="true">
+    <meta name="MobileOptimized" content="320">
+    <meta name="360-fullscreen" content="true" />
+
+    <meta name="theme-color" content="#000000" />
+    <meta name="renderer" content="webkit" />
+    <!--[if IE]>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <![endif]-->
+    <!-- 视图窗口，移动端特属的标签。 -->
+    <meta name="viewport"
+        content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no" />
+    <meta name="description" content="lark3.0" />
+    <title>平行云</title>
+    <link href="./css/bootstrap.min.css" rel="stylesheet">
+    <script src="./js/jquery.min.js"></script>
+    <script src="./dist/larksr-web-sdk.min.js"></script>
+    <script src="./dist/pxy_webcommonui.min.js"></script>
+    <script src="https://unpkg.com/vconsole@latest/dist/vconsole.min.js" crossorigin="anonymous"></script>
+    <script>
+        var client;
+        $(document).ready(function () {
+            // console
+            // var vConsole = new window.VConsole();
+
+            client = new larksr_websdk.LarkSR({
+                // 设置挂载显示的元素
+                // 注意*不要*设置为 document.documentElement
+                rootElement: document.getElementById('container'),
+                // 服务器地址,实际使用中填写您的服务器地址
+                // 如：http://222.128.6.137:8181/
+                // 当使用平行云托管服务时服务器地址自动分配,可留空。
+                serverAddress: "http://192.168.0.55:8181/",
+                // 授权码
+                // authCode: '您的 SDK ID 联系 business@pingxingyun.com 获取',
+                // 视频缩放模式，默认保留宽高比，不会拉伸并完整显示在容器中
+                scaleMode: 'contain',
+                // 0 -》 用户手动触发, 1 -》 首次点击进入触发, 2 -》 每次点击触发
+                fullScreenMode: 0,
+                // 测试载入背景图
+                // loadingBgUrl: 'https://home-obs.pingxingyun.com/homePage_4_0/bg.jpg',
+            });
+
+            client.initSDKAuthCode('YOUR SDKID')
+                .then(function () {
+                    // 开始连接
+
+                    // 连接平行云托管平台的应用
+                    // client.connectWithPxyHost({
+                    //     // 从平行云托管平台获取
+                    //     appliId: "924970933473509376",
+                    //     // playerMode: 2,
+                    //     // userType: 1,
+                    //     // taskId: "",
+                    //     // nickname: "Test",
+                    // })
+                    // .catch(function(e) {
+                    //     console.error('enter appli falied', e);
+                    //     alert(JSON.stringify(e));
+                    // });
+
+                    client.connect({
+                            // 要使用的云端资源的应用 ID，从后云雀后台接口获取
+                            // 参考查询应用一栏文档
+                            // https://www.pingxingyun.com/online/api3_2.html?id=476
+                            // 如 222.128.6.137:8181 系统下的 879414254636105728 应用
+                            // appliId: "968821985918320640",
+                            // appliId: "991347084735021056",//test
+                            appliId: "998888209364549632", //test
+                            // appliId: "968194016426328064",//test
+                            // appliId: "968821985918320640", // tatami1
+                            // appliId: "968851300508762112", // tatami2
+                            // playerMode: 2,
+                            // userType: 1,
+                            // taskId: "",
+                            // nickname: "Test",
+                        })
+                        .catch(function (e) {
+                            console.error('enter appli falied', e);
+                            alert(JSON.stringify(e));
+                        });
+                })
+                .catch(function (e) {
+                    console.error('auth falied', e);
+                    //alert(JSON.stringify(e));
+                });
+
+            // 监听连接成功事件
+            client.on('connect', function (e) {
+                console.log("LarkSRClientEvent CONNECT", e);
+            });
+            client.on('gotremotesteam', function (e) {
+                console.log("LarkSRClientEvent gotremotesteam", e);
+            });
+            client.on('meidaloaded', function (e) {
+                console.log("LarkSRClientEvent meidaloaded", e);
+                client.getConnectedAudioinputDevices()
+                    .then(function (res) {
+                        console.log("getConnectedAudioinputDevices", res);
+                        res.forEach(function (device) {
+                            var deviceOption =
+                                `<option value="${device.deviceId}">${device.label}</option>`;
+                            console.log('add audio intput device option', deviceOption);
+                            $("#audio-input-device").append(deviceOption);
+                        });
+                    })
+                    .catch((e) => {
+                        console.error(e);
+                    });
+
+                client.getConnectedAudioOutputDevices()
+                    .then(function (res) {
+                        console.log("getConnectedAudioOutputDevices", res)
+                        res.forEach(function (device) {
+                            var deviceOption =
+                                `<option value="${device.deviceId}">${device.label}</option>`;
+                            console.log('add audio intput device option', deviceOption);
+                            $("#audio-output-device").append(deviceOption);
+                        });
+                    })
+                    .catch((e) => {
+                        console.error(e);
+                    });
+
+                client.getConnectedVideoinputDevices()
+                    .then(function (res) {
+                        console.log("getConnectedVideoinputDevices", res);
+                        res.forEach(function (device) {
+                            var deviceOption =
+                                `<option value="${device.deviceId}">${device.label}</option>`;
+                            console.log('add video intput device option', deviceOption);
+                            $("#video-input-device").append(deviceOption);
+                        });
+                    })
+                    .catch((e) => {
+                        console.error(e);
+                    });
+            });
+            client.on('mediaplaysuccess', function (e) {
+                console.log("LarkSRClientEvent mediaplaysuccess", e);
+            });
+            client.on('mediaplayfailed', function (e) {
+                console.log("LarkSRClientEvent mediaplayfailed", e);
+            });
+            client.on('meidaplaymute', function (e) {
+                console.log("LarkSRClientEvent meidaplaymute", e);
+            });
+            client.on('playerlist', function (e) {
+                console.log("LarkSRClientEvent playerlist", e);
+            });
+            client.on('error', function (e) {
+                console.error("LarkSRClientEvent error", e);
+                //alert(JSON.stringify(e.message));
+            });
+            client.on('info', function (e) {
+                console.log("LarkSRClientEvent info", e);
+            });
+            client.on(larksr_websdk.LarkSRClientEvent.DATACHANNEL_TEXT, (e) => {
+                console.log("LarkSRClientEvent DATACHANNEL_TEXT", e);
+                $("#text-from-datachannel").text(e.data);
+            });
+            client.on(larksr_websdk.LarkSRClientEvent.DATACHANNEL_BINARY, (e) => {
+                console.log("LarkSRClientEvent DATACHANNEL_BINARY", e);
+                $("#text-from-datachannel").text(e.data);
+            });
+
+            // ...
+            // 主动关闭并清理资源
+            // client.close();
+
+            // ui handler
+            $("#open-audio").on("click", function (e) {
+                console.log("open-audio");
+                client.openAudio();
+            });
+            $("#close-audio").on("click", function (e) {
+                console.log("close-audio");
+                client.closeAudio();
+            });
+            $("#open-video").on("click", function (e) {
+                console.log("open-video");
+                client.openVideo();
+            });
+            $("#close-audio").on("click", function (e) {
+                console.log("close-audio");
+                client.closeVideo();
+            });
+            $("#open-share").on("click", function (e) {
+                console.log("open-share");
+                client.openShareMediaDevice();
+            });
+            $("#close-share").on("click", function (e) {
+                console.log("close-share");
+                client.stopLocalShare();
+            });
+
+            var audioInputBind;
+            $("#open-audio-input-device").on("click", function (e) {
+                console.log('open-audio-input-device', $("#audio-input-device").val());
+                client.openAudioDevice($("#audio-input-device").val(), 'audioinput')
+                    .then(function (res) {
+                        audioInputBind = res;
+                    })
+                    .catch(function (e) {
+                        console.log('open audio input device failed', e);
+                    });
+            });
+            $("#open-audio-output-device").on("click", function (e) {
+                console.log('open-audio-output-device', $("#audio-output-device").val());
+                client.openAudioDevice($("#audio-output-device").val(), 'audiooutput');
+            });
+            $("#close-audio-input-device").on("click", function (e) {
+                if (audioInputBind) {
+                    console.log('close-audio-input-device', audioInputBind);
+                    client.removeMediaTrack(audioInputBind.rtcRtpSenders[0].sender);
+                    audioInputBind = null;
+                }
+            });
+
+
+            var videoInputBind;
+            $("#open-video-input-device").on("click", function (e) {
+                console.log('open-video-input-device', $("#video-input-device").val());
+                client.openCamera($("#video-input-device").val(), 1280, 720)
+                    .then(function (res) {
+                        videoInputBind = res;
+                    })
+                    .catch(function (e) {
+                        console.log('open audio input device failed', e);
+                    });
+            });
+            $("#close-video-input-device").on("click", function (e) {
+                if (videoInputBind) {
+                    console.log('close-video-input-device', videoInputBind);
+                    client.removeMediaTrack(videoInputBind.rtcRtpSenders[0].sender);
+                    videoInputBind = null;
+                }
+            });
+
+
+            $("#button-datachannel").on("click", function (e) {
+                var text = $("#input-datachannel").val();
+                console.log("input-datachannel ", text);
+                client.sendTextToDataChannel(text);
+            });
+            $("#input-datachannel").on("focus", function () {
+                console.log("focus");
+                client.op.setKeyboardEnable(false);
+            })
+            $("#input-datachannel").on("blur", function () {
+                console.log("blur");
+                client.op.setKeyboardEnable(true);
+            })
+
+            $("#button-rtmp-start").on("click", function (e) {
+                var path = $("#rtmp-path").val();
+                console.log("rtmp-path ", path);
+                var key = $("#rtmp-key").val();
+                console.log("rtmp-key ", key);
+                client.StartCloudLiveStreaming({
+                        path: path,
+                        key: key,
+                    })
+                    .then((res) => {
+                        console.log("start rtmp", res);
+                    })
+                    .catch((err) => {
+                        alert(err);
+                    })
+            });
+            $("#button-rtmp-stop").on("click", function (e) {
+                client.StopLiveStreaming();
+            });
+            $("#rtmp-path").on("focus", function () {
+                console.log("focus");
+                client.op.setKeyboardEnable(false);
+            })
+            $("#rtmp-path").on("blur", function () {
+                console.log("blur");
+                client.op.setKeyboardEnable(true);
+            })
+            $("#rtmp-key").on("focus", function () {
+                console.log("focus");
+                client.op.setKeyboardEnable(false);
+            })
+            $("#rtmp-key").on("blur", function () {
+                console.log("blur");
+                client.op.setKeyboardEnable(true);
+            })
+            client.on(larksr_websdk.LarkSRClientEvent.RTMP_STREAM_STATE, (e) => {
+                console.log("LarkSRClientEvent RTMP_STREAM_STATE", e);
+                $("#rtmp-state").text(JSON.stringify(e.data));
+            });
+            client.on(larksr_websdk.LarkSRClientEvent.RTMP_STREAM_ERROR, (e) => {
+                console.log("LarkSRClientEvent RTMP_STREAM_ERROR", e);
+                $("#rtmp-state").text(JSON.stringify(e.data));
+            });
+
+
+            // sample for pxy commonui 
+            // create joystick
+            var joystick = new pxy_webcommonui.JoystickComponent({
+                target: document.getElementById('joystick-container'),
+                props: {
+
+                    // 可选项，larksr 对象，由 larksr websdk 创建出来
+                    // 传入后自动发送对应的按键给云端。如果不传入，应手动处理事件，如 joystickstart joystickmove joystickend
+                    // npm https://www.npmjs.com/package/larksr_websdk
+                    // doc https://github.com/pingxingyun/lark_sr_websdk_demos
+                    // demos https://pingxingyun.github.io/webclient_sdk/
+                    larksr: client,
+
+                    //  可选项 subType  1 wasd  2 updownleftright 3 joystick 0 none
+                    // 发送给云端的按键类型
+                    // 类型 1 对应键盘 WASD 按键
+                    // 类型 2 对应键盘上下左右箭头
+                    // 类型 3 对应物理摇杆
+                    // 类型 0 不发送事件
+                    // 默认为 1
+                    subType: 1,
+
+                    // 可选项,摇杆的位置。
+                    // 注意，如果不传入应调整父组件的位置
+                    position: {
+                        top: 150,
+                        left: 100,
+                    },
+
+                    // 可选项，摇杆的大小
+                    // 注意，如果不传入，应设置父组件的大小。不传入时摇杆与父组件大小相同
+                    size: {
+                        width: 200,
+                        height: 200,
+                    },
+
+                    // 可选项，摇杆中间按钮的大小
+                    // 注意，如果不传入，默认中间的按钮为总摇杆的 25%
+                    centerSize: {
+                        width: 100,
+                        height: 100,
+                    },
+
+                    // 可选项，额外的摇杆样式，会附加到其他样式后面，可覆盖默认样式
+                    extralJoystickStyle: 'background-color: red;',
+
+                    // 可选项，额外的摇杆中间按钮样式，会附加到其他样式后面，可覆盖默认样式
+                    extralCenterStyle: 'background-color: #fff;',
+
+                    // 可选项，摇杆的背景图片。最终设置为样式 background-image
+                    joystickBackgroundUrl: "",
+
+                    // 可选项，摇杆中间按钮的背景图片，最终设置为样式 background-image
+                    centerBackgroundUrl: "",
+
+                    // 可选项，触发事件的时间间隔
+                    repeatTimeout: 10,
+                },
+            });
+
+            // events.
+            // this.joystick.$on("joystickstart", function(e) {
+            //   console.log("joystickstart", e.detail);
+            // });
+            // this.joystick.$on("joystickend", function(e) {
+            //   console.log("joystickend", e.detail);
+            // });
+            // this.joystick.$on("joystickmove", function(e) {
+            //   console.log("joystickmove", e.detail);
+            // });
+
+            // destroy joystick
+            // joystick.$destroy();
+        });
+    </script>
+    <style>
+        .ui {
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+        }
+
+        .ui .handler.handler-touchstart {
+            background-color: red;
+        }
+
+        .ui button {
+            pointer-events: all;
+        }
+
+        .ui .block {
+            padding: 10px;
+        }
+
+        .ui select {
+            pointer-events: all;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="container">
+        <!-- 演示 UI 层 -->
+        <div class="ui">
+            <div class="block">
+                <button id="open-audio">
+                    OpenAudio
+                </button>
+                <button id="close-audio">
+                    CloseAudio
+                </button>
+                <button id="open-video">
+                    OpenVideo
+                </button>
+                <button id="close-audio">
+                    CloseVideo
+                </button>
+                <button id="open-share">
+                    openShareMediaDevice
+                </button>
+                <button id="close-share">
+                    stopShareMediaDevice
+                </button>
+            </div>
+            <div class="block">
+                <select name="音频输入设备" id="audio-input-device">
+                </select>
+                <button id="open-audio-input-device">打开音频输入设备</button>
+                <button id="close-audio-input-device">关闭音频输入设备</button>
+            </div>
+            <!-- <div class="block">
+                <select id="audio-output-device">
+                </select>
+                <button id="open-audio-output-device">打开音频输出设备</button>
+            </div> -->
+            <div class="block">
+                <select id="video-input-device">
+                </select>
+                <button id="open-video-input-device">打开视频输入设备</button>
+                <button id="close-video-input-device">关闭音频输入设备</button>
+            </div>
+            <div class="block">
+                <input placeholder="发送给云端数据通道" id="input-datachannel" type="text" />
+                <button id="button-datachannel">发送</button>
+                <p id="text-from-datachannel"></p>
+            </div>
+            <div class="block">
+                <input placeholder="rtmp-path" id="rtmp-path" type="text" />
+                <input placeholder="rtmp-key" id="rtmp-key" type="text" />
+                <button id="button-rtmp-start">启动rtmp</button>
+                <button id="button-rtmp-stop">关闭rtmp</button>
+                <p id="rtmp-state"></p>
+            </div>
+            <div id="joystick-container" style="position: absolute;">
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

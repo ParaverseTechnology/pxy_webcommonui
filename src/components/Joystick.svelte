@@ -9,10 +9,28 @@ import Unit                      from '@/utils/unit';
 
 // 
 // global setup
-// subType  1 wasd  2 updownleftright 3 joystick
+// subType  1 wasd  2 updownleftright 3 joystick 0 none
+export const SUBTYPE_NONE            = 0;
+export const SUBTYPE_WASD            = 1;
+export const SUBTYPE_UPDOWNLEFTRIGHT = 2;
+export const SUBTYPE_JOSYTICK_MOVE   = 3;
 export let subType = 1;
-export let position = { left: 0, top: 0 };
-export let larksr = null;
+// position { top: number, left: number }
+export let position: undefined | null | { top: number, left: number } = null;
+export let size: undefined | null | { width: number, height: number } = null;
+export let extralJoystickStyle = "";
+export let extralCenterStyle = "";
+export let joystickBackgroundUrl = "";
+export let centerBackgroundUrl = "";
+export let centerSize: undefined | null | { width: number, height: number } = null;
+export let repeatTimeout = 5;
+export let larksr: any = null;
+
+export const EVENTS_JOYSTICK_START        = "joystickstart";
+export const EVENTS_JOYSTICK_END          = "joystickend";
+export const EVENTS_JOSYTICK_MOVE         = "joystickmove";
+
+const dispatch = createEventDispatcher();
 
 // local vars
 let joystickElement = {
@@ -26,12 +44,12 @@ let joysickTouchesPosition = {
     y: 0,
 };
 
-let leftJoyStickKeys = [];
+let leftJoyStickKeys: any = [];
 
-let vector = null;
+let vector: any = null;
 
 // joystick component
-let joystick;
+let joystick: any = null;
 
 // getters
 // from larksr state
@@ -44,14 +62,28 @@ function getViewPort() {
 
 // local getters
 function getJoystickPosition() {
-    if (position) {
+    let p = position;
+    if (!p && joystick && joystick.getRootElement()) {
+        if (getScreenOrientation() == 'landscape') {
+            p = {
+                left: Unit.getBoundingClientRect(joystick.getRootElement()).top,
+                top: getViewPort().height - Unit.getBoundingClientRect(joystick.getRootElement()).right,
+            };
+        } else {
+            p = Unit.getBoundingClientRect(joystick.getRootElement());
+        }
+    }
+
+    // Log.info("getJoystickPosition ", p);
+
+    if (p) {
         if (getScreenOrientation() == 'landscape') {
             return {
-                top: position.left,
-                left: getViewPort().height - position.top,
+                top: p.left,
+                left: getViewPort().height - p.top,
             }
         } else {
-            return position;
+            return p;
         }
     } else {
         return {
@@ -82,7 +114,7 @@ export function resize() {
     }
 }
 
-function onJoyStickStart(event) {
+function onJoyStickStart(event: any) {
     Log.info("onJoyStickStart", event);
 
     const e = event.detail.event;
@@ -104,8 +136,8 @@ function onJoyStickStart(event) {
         vector = v;
     }
 }
-function onJoyStickMove(event) {
-    Log.info("onJoyStickMove");
+function onJoyStickMove(event: any) {
+    // Log.info("onJoyStickMove");
 
     const e = event.detail.event;
     const screenOrientation = getScreenOrientation();
@@ -113,7 +145,7 @@ function onJoyStickMove(event) {
     
     let p = { x: 0, y: 0 };
     
-    // console.log("onJoyStickMove", screenOrientation);
+    // Log.info("onJoyStickMove", screenOrientation);
 
     // 通过旋转横屏时注意触摸的坐标系变换
     if (screenOrientation === "landscape") {
@@ -123,16 +155,26 @@ function onJoyStickMove(event) {
         p = Unit.singlePointRelativePosition(e.targetTouches[0], e.target);
     }
 
-    // console.log("onJoyStickMove", screenOrientation, p);
+    // Log.info("onJoyStickMove", screenOrientation, p);
 
     if (p) {
         joysickTouchesPosition = p;
         let v = getLimitRelativeVector(p.x, p.y);
         setLimitTouchPosition(v);
         vector = v;
+
+        // emit event
+        const RADIUS = joystickElement.width / 2;
+        let relCenterPositionX = joysickTouchesPosition.x / RADIUS - 1;
+        let relCenterPositionY = -(joysickTouchesPosition.y / RADIUS - 1);
+        
+        dispatch(EVENTS_JOYSTICK_START, {
+            x: relCenterPositionX,
+            y: relCenterPositionY,
+        });
     }
 }
-function onJoyStickEnd(event) {
+function onJoyStickEnd(event: any) {
     Log.info("onJoyStickEnd");
 
     if(subType && subType == 3) {
@@ -149,9 +191,14 @@ function onJoyStickEnd(event) {
         larksr?.keyUp(key);
     }
     leftJoyStickKeys = [];
+
+    dispatch(EVENTS_JOYSTICK_END, {
+        x: 0,
+        y: 0,
+    });
 }
-function onJoyStickRepeat(event) {
-    Log.info("onJoyStickRepeat");
+function onJoyStickRepeat(event: any) {
+    // Log.info("onJoyStickRepeat");
 
     if (vector == null) {
         return;
@@ -160,10 +207,23 @@ function onJoyStickRepeat(event) {
     if (vector.r < RADIUS / 4) {
         return;
     }
+
+    let relCenterPositionX = joysickTouchesPosition.x / RADIUS - 1;
+    let relCenterPositionY = -(joysickTouchesPosition.y / RADIUS - 1);
+
+    dispatch(EVENTS_JOSYTICK_MOVE, {
+        x: relCenterPositionX,
+        y: relCenterPositionY,
+    });
+
+    // skip auto send event.
+    if (subType != undefined && subType != null && subType == 0) {
+        return;
+    }
+
     // subType  1 wasd  2 updownleftright 3 joystick
     if(subType && subType == 3) {
-        let relCenterPositionX = joysickTouchesPosition.x / RADIUS - 1;
-        let relCenterPositionY = -(joysickTouchesPosition.y / RADIUS - 1);
+
         // 0.96 = 1
         const offset = 0.05; 
         if (relCenterPositionX > (1 - offset)) {
@@ -212,7 +272,7 @@ function onJoyStickRepeat(event) {
         leftJoysStickKeyChannge([getSubKeyType("KeyS"), getSubKeyType("KeyD")]);
     }
 }
-function getSubKeyType(key) {
+function getSubKeyType(key: any) {
     // Log.info("getSubKeyType ", key, this.subType);
     // subType  1 wasd  2 updownleftright 3 joystick
     if(subType && subType == 2) {
@@ -233,11 +293,11 @@ function getSubKeyType(key) {
     }
 }
 
-function leftJoysStickKeyChannge(newKeys) {
+function leftJoysStickKeyChannge(newKeys: any) {
     let oldKeys = leftJoyStickKeys;
     // key start press
     if (oldKeys.length === 0) {
-        console.log("press start", newKeys);
+        Log.info("press start", newKeys);
         for (let key of newKeys) {
             larksr?.keyDown(key, false);
         }
@@ -259,7 +319,7 @@ function leftJoysStickKeyChannge(newKeys) {
 
     for (let i = 0; i < oldKeys.length; i++) {
         if (oldKeyChannged[i]) {
-            console.log("release old key ", oldKeys[i]);
+            Log.info("release old key ", oldKeys[i]);
             larksr?.keyUp(oldKeys[i]);
         }
     }
@@ -279,10 +339,10 @@ function leftJoysStickKeyChannge(newKeys) {
 
     for (let i = 0; i < newKeys.length; i++) {
         if (newKeyChannged[i]) {
-            console.log("press new key", newKeys[i]);
+            Log.info("press new key", newKeys[i]);
             larksr?.keyDown(newKeys[i], false);
         } else {
-            // console.log("repeat key", newKeys[i]);
+            // Log.info("repeat key", newKeys[i]);
             larksr?.keyDown(newKeys[i], true);
         }
     }
@@ -300,7 +360,7 @@ function leftJoysStickKeyChannge(newKeys) {
  *      3   |    4
  *          | 1
  */
-function getAreia(vector) {
+function getAreia(vector: any) {
     if (vector.dx == 1 && vector.dy == -1) {
         return 1;
     } else if (vector.dx == -1 && vector.dy == -1) {
@@ -312,17 +372,17 @@ function getAreia(vector) {
     }
 }
 // 获取角度区域
-function getDegAreia(vector) {
+function getDegAreia(vector: any) {
     let deg = (Math.atan(vector.ry / vector.rx) * 180) / Math.PI;
     let absDeg = Math.abs(deg);
     if (absDeg <= 22.5) {
-        // console.log("deg h", deg, vector.dx, vector.dy);
+        // Log.info("deg h", deg, vector.dx, vector.dy);
         return 1;
     } else if (absDeg > 22.5 && absDeg <= 67.5) {
-     // console.log("deg center", deg, vector.dx, vector.dy);
+     // Log.info("deg center", deg, vector.dx, vector.dy);
         return 2;
     } else {
-        // console.log("deg up", deg, vector.dx, vector.dy);
+        // Log.info("deg up", deg, vector.dx, vector.dy);
         return 3;
     }
 }
@@ -333,7 +393,7 @@ function getDegAreia(vector) {
  * @param y 本地坐标y
  * @return vector 方向：相对圆心的位置，大小：相对圆心距离，不超过半径
  */
-function getLimitRelativeVector(x, y) {
+function getLimitRelativeVector(x: number, y: number) {
     const RADIUS = joystickElement.width / 2;
     // local x,y
     let rx = x - RADIUS;
@@ -359,7 +419,7 @@ function getLimitRelativeVector(x, y) {
 /**
  * 根据相对移动的向量设置圆心位置。不会超过整个摇杆背景。
  */
-function setLimitTouchPosition(vector) {
+function setLimitTouchPosition(vector: any) {
     let res = {
         x: 0,
         y: 0,
@@ -402,37 +462,62 @@ onMount(() => {
     window.addEventListener('resize', () => { resize(); });
     resize();
 });
+
+function getJoystickStyle() {
+    let positionStyle = `position: absolute;top:${position ? position.top : 0}px;left:${position ? position.left : 0}px;z-index: 1500;`;
+    let backgroundStyle = `background-size: cover; background-repeat: no-repeat; background-position: center;`;
+    if (joystickBackgroundUrl) {
+        backgroundStyle += `background-image: url(${joystickBackgroundUrl});`;
+    }
+    let sizeStyle = "";
+    if (!size) {
+        sizeStyle = `width: 100%;height: 100%;`;
+    } else {
+        sizeStyle = `width: ${size.width}px;height: ${size.height}px; border-radius: 50%;`;
+    }
+
+    return positionStyle + backgroundStyle + sizeStyle + extralJoystickStyle;
+}
+
+function getCenterStyle() {
+    let backgroundStyle = `background-size: cover; background-repeat: no-repeat; background-position: center;`;
+    if (centerBackgroundUrl) {
+        backgroundStyle += `background-image: url(${centerBackgroundUrl});`;
+    }
+    let sizeStyle = "";
+    if (!centerSize) {
+        sizeStyle = `width: 25%;height: 25%; border-radius: 50%; margin-top: -12.5%; margin-left: -12.5%;`;
+    } else {
+        sizeStyle = `width: ${centerSize.width}px;height: ${centerSize.height}px; border-radius: 50%; margin-top: ${-centerSize.width / 2}px; margin-left: ${-centerSize.height / 2}px;`;
+    }
+    return sizeStyle + backgroundStyle + extralCenterStyle;
+}
 </script>
 
-<div class="joy-container">
-    <RepeatButton 
-        bind:this={joystick}
-        style="position: absolute;z-index: 1500;background-size: cover; background-repeat: no-repeat; background-position: center; background-color: red; width: 150px; height: 150px; border-radius: 50%;"
-        on:start={onJoyStickStart}
-        on:move={onJoyStickMove}
-        on:end={onJoyStickEnd}
-        on:repeat={onJoyStickRepeat}
-    >
-        <dvi class="center" style="left: {joysickTouchesPosition.x}px; top: {joysickTouchesPosition.y}px;">
-            test
-        </dvi>
-    </RepeatButton>
-</div>
+<RepeatButton 
+    bind:this={joystick}
+    style="{getJoystickStyle()}"
+    repeatTimeout={repeatTimeout}
+    on:start={onJoyStickStart}
+    on:move={onJoyStickMove}
+    on:end={onJoyStickEnd}
+    on:repeat={onJoyStickRepeat}
+>
+    <dvi class="center" style="left: {joysickTouchesPosition.x}px; top: {joysickTouchesPosition.y}px;{getCenterStyle()}">
+    </dvi>
+</RepeatButton>
 
 <style lang="scss">
-.joy-container {
+.center {
     position: absolute;
-    .center {
-        position: absolute;
-        background-size: cover;
-        background-repeat: no-repeat;
-        background-position: center;
-        top: 50%;
-        left: 50%;
-        pointer-events: none;
-        // for test
-        // background-color: aqua;
-        border-radius: 50%;
-    }
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    top: 50%;
+    left: 50%;
+    pointer-events: none;
+    // for test
+    // background-color: aqua;
+    border-radius: 50%;
 }
 </style>
