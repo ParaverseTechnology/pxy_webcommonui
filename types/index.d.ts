@@ -1,13 +1,16 @@
 import 'core-js/stable/symbol';
-import JoystickComponent from './components/Joystick.svelte';
+import { Joystick, KJoystickEvents, KJoystickSubTypes } from './joystick';
+import type { IJoystickConfig } from './joystick';
 import Log from './utils/log';
 import Unit from './utils/unit';
 import Capabilities from './utils/capabilities';
 declare const _default: {
-    JoystickComponent: typeof JoystickComponent;
-    RepeateButtonComponent: typeof JoystickComponent;
+    Joystick: typeof Joystick;
     Log: typeof Log;
     Unit: typeof Unit;
     Capabilities: typeof Capabilities;
+    KJoystickEvents: typeof KJoystickEvents;
+    KJoystickSubTypes: typeof KJoystickSubTypes;
 };
 export default _default;
+export { IJoystickConfig, };
