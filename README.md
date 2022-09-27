@@ -121,3 +121,23 @@ this.joystick.on(KJoystickEvents.EVENTS_JOYSTICK_END, function(e) {
 
 > 配置 Joystick 样式有两种方式，一种是直接父组件的样式，如大小宽高，背景等，这种情况下不要设置 position，size 等影响 Joystick 组件内部的样式。
 > 另外一种是不设置父组件的样式，直接设置 position，size，extralJoystickStyle, joystickBackgroundUrl
+
+### 发送给云端的按键类型（WASD模式下）和左边对应关系
+
+![](./doc/wasd.png)
+
+## 调试源码
+
+1. 运行 test 项目, [./test/App.tsx](./test/App.tsx) 中配置好 larksr 的相关参数。
+
+```bash
+yarn run dev
+```
+
+![](./doc/test.png)
+
+2. 本地打包, 打包好的文件在 dist 目录下
+
+```bash
+yarn run dist
+```

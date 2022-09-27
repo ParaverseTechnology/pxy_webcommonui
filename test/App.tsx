@@ -13,6 +13,8 @@ const {
   KJoystickSubTypes
 } = PxyCommonUI;
 import VConsole from 'vconsole';
+import JoystickBottomImage from './assets/joy_stick_bottom.png';
+import JoystickTopImage from './assets/joy_stick_top.png';
 
 export default class App extends React.Component {
   private myRef;
@@ -41,6 +43,7 @@ export default class App extends React.Component {
       fullScreenMode: 0,
       mobileFullScreenMode: 0,
       serverAddress: "http://222.128.6.137:8585/",
+      mobileForceLandscape: true,
     });
 
     // setup sdk id.
@@ -115,28 +118,28 @@ export default class App extends React.Component {
       // 可选项，摇杆的大小
       // 注意，如果不传入，应设置父组件的大小。不传入时摇杆与父组件大小相同
       size: {
-        width: 200, 
-        height: 200,
+        width: 150, 
+        height: 150,
       },
 
       // 可选项，摇杆中间按钮的大小
       // 注意，如果不传入，默认中间的按钮为总摇杆的 25%
       centerSize: {
-        width: 100,
-        height: 100,
+        width: 60,
+        height: 60,
       },
 
       // 可选项，额外的摇杆样式，会附加到其他样式后面，可覆盖默认样式
-      extralJoystickStyle: 'background-color: red;',
+      extralJoystickStyle: '',
 
       // 可选项，额外的摇杆中间按钮样式，会附加到其他样式后面，可覆盖默认样式
-      extralCenterStyle: 'background-color: #fff;',
+      extralCenterStyle: '',
 
       // 可选项，摇杆的背景图片。最终设置为样式 background-image
-      joystickBackgroundUrl: "",
+      joystickBackgroundUrl: JoystickBottomImage,
 
       // 可选项，摇杆中间按钮的背景图片，最终设置为样式 background-image
-      centerBackgroundUrl: "",
+      centerBackgroundUrl: JoystickTopImage,
 
       // 可选项，触发事件的时间间隔
       repeatTimeout: 10,
@@ -168,6 +171,8 @@ export default class App extends React.Component {
               // width: 100, 
               // height: 100, 
               // borderRadius: '50%' 
+              // backgroundImage: `url(${JoystickBottomImage})`,
+              // backgroundSize: 'cover',
             }}>
           </div>
         </div>
