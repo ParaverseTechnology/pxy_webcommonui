@@ -90,14 +90,11 @@ function onSelect(e: Event) {
     e.preventDefault();
     e.stopPropagation();
 }
-function getClassName() {
-    return touched ? "key keyPress " + className : "key " + className;
-}
 </script>
 
 <div 
     bind:this={element}
-    class={getClassName()}
+    class={touched ? "key keyPress " + className : "key " + className}
     style={style}
     on:touchstart={onTouchStart}
     on:touchmove={onTouchMove}

@@ -10,7 +10,8 @@ import PxyCommonUI from '../src/index';
 const { 
   Joystick, 
   KJoystickEvents,
-  KJoystickSubTypes
+  KJoystickSubTypes,
+  Log
 } = PxyCommonUI;
 import VConsole from 'vconsole';
 import JoystickBottomImage from './assets/joy_stick_bottom.png';
@@ -35,6 +36,7 @@ export default class App extends React.Component {
     this.uiContainerRef = React.createRef();
   }
   componentDidMount() {
+    Log.logLevel = "info";
     this.vConsole = new VConsole();
 
     // create with config.
@@ -42,16 +44,21 @@ export default class App extends React.Component {
       rootElement: this.myRef.current, 
       fullScreenMode: 0,
       mobileFullScreenMode: 0,
-      serverAddress: "http://222.128.6.137:8585/",
+      serverAddress: "http://222.128.6.137:8181/",
+      // serverAddress: "http://222.128.6.137:8585/",
+      // serverAddress: "http://192.168.0.55:8181/",
       mobileForceLandscape: true,
+      preferDecoder: 'auto'
     });
 
     // setup sdk id.
     // YOUR SDKID
-    this.larksr.initSDKAuthCode('YOUR SDKID')
+    this.larksr.initSDKAuthCode('6b09421012994a2bba959b556fc2b78f')
     .then(() => {
       this.larksr.connect({
-        appliId: "904774812193259520",
+        // appliId: "904774812193259520",
+        appliId: "879414254636105728", // people
+        // appliId: "1013814676569456640",
       })
       .then(() => {
         console.log('enter success');
@@ -79,7 +86,12 @@ export default class App extends React.Component {
       console.log("LarkSRClientEvent MEDIA_LOADED", e); 
     });
 
-    this.larksr.on(LarkSRClientEvent.MEDIA_PLAY_SUCCESS, (e) => { console.log("LarkSRClientEvent MEDIA_PLAY_SUCCESS", e); });
+    this.larksr.on(LarkSRClientEvent.MEDIA_PLAY_SUCCESS, (e) => { 
+      console.log("LarkSRClientEvent MEDIA_PLAY_SUCCESS", e); 
+      if (this.joystick) {
+        this.joystick.show();
+      }
+    });
     this.larksr.on(LarkSRClientEvent.MEDIA_PLAY_FAILED, (e) => { console.log("LarkSRClientEvent MEDIA_PLAY_FAILED", e); });
     this.larksr.on(LarkSRClientEvent.MEDIA_PLAY_MUTE, (e) => { console.log("LarkSRClientEvent MEDIA_PLAY_MUTE", e); });
 
@@ -112,7 +124,7 @@ export default class App extends React.Component {
       // 注意，如果不传入应调整父组件的位置
       position: {
         top: 150,
-        left: 100,
+        left: 500,
       },
 
       // 可选项，摇杆的大小
@@ -145,6 +157,30 @@ export default class App extends React.Component {
       repeatTimeout: 10,
     });
 
+    // 通过属性配置
+    // this.joystick.larksr = this.larksr;
+    // this.joystick.subType = 1;
+    // this.joystick.position = {
+    //   left: 100,
+    //   top: 150,
+    // };
+    // this.joystick.size = {
+    //   width: 150,
+    //   height: 150,
+    // };
+    // this.joystick.centerSize = {
+    //   width: 60,
+    //   height: 60,
+    // };
+    // this.joystick.extralJoystickStyle = "";
+    // this.joystick.extralCenterStyle = "";
+    // this.joystick.joystickBackgroundUrl = JoystickBottomImage;
+    // this.joystick.centerBackgroundUrl = JoystickTopImage;
+    // this.joystick.repeatTimeout = 10;
+
+    // hide 
+    this.joystick.hide();
+
     // this.joystick.on(KJoystickEvents.EVENTS_JOYSTICK_START, function(e) {
     //   console.log("joystickstart", e.detail);
     // });
@@ -162,6 +198,17 @@ export default class App extends React.Component {
   render() {
       return (
         <div ref={this.myRef} style={{ position: 'relative', width: '100%', height: '100%' }}>
+          <button style={{position: 'absolute', zIndex: 2000, top: 100, left: 0}} onClick={() => {
+            this.joystick.show();
+          }}>
+            show
+          </button>          
+          <button style={{position: 'absolute', zIndex: 2000, top: 125, left: 0}} onClick={() => {
+            this.joystick.hide();
+          }}>
+            hide
+          </button>
+
           <div ref={this.uiContainerRef} style = {{
               position: 'absolute', 
               zIndex: 2000, 

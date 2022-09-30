@@ -105,6 +105,116 @@ enum KJoystickSubTypes {
 }
 
 class Joystick {
+    /**
+     * larksr 对象，由 larksr websdk 创建出来
+     * 传入后自动发送对应的按键给云端。如果不传入，应手动处理事件，如 joystickstart joystickmove joystickend
+     * larksr npm https://www.npmjs.com/package/larksr_websdk
+     * larksr doc https://github.com/pingxingyun/lark_sr_websdk_demos
+     * larksr demos https://pingxingyun.github.io/webclient_sdk/
+     */
+    public set larksr(larksr: any) {
+        this.joystick.$set({'larksr': larksr});
+        // update size after ui update
+        this.joystick.$set({'updateing': true});
+    }
+
+    /**
+     * subType  1 wasd  2 updownleftright 3 gamepad 0 none
+     * 发送给云端的按键类型
+     * 类型 1 对应键盘 WASD 按键
+     * 类型 2 对应键盘上下左右箭头
+     * 类型 3 对应物理摇杆
+     * 类型 0 不发送事件
+     * 默认为 1
+     */
+    public set subType(subType: KJoystickSubTypes) {
+        this.joystick.$set({'subType': subType});
+    }
+
+    /**
+     * 摇杆的位置。
+     * 注意，如果不传入应调整父组件的位置
+     */
+    public set position(position: {
+        top: number,
+        left: number,
+    }) {
+        this.joystick.$set({'position': position});
+        // update size after ui update
+        this.joystick.$set({'updateing': true});
+    }
+
+    /**
+     * 摇杆的大小
+     * 注意，如果不传入，应设置父组件的大小。不传入时摇杆与父组件大小相同
+     */
+    public set size(size: {
+        width: number, 
+        height: number,
+    }) {
+        this.joystick.$set({'size': size});
+        // update size after ui update
+        this.joystick.$set({'updateing': true});
+    }
+
+    /**
+     * 摇杆中间按钮的大小
+     * 注意，如果不传入，默认中间的按钮为总摇杆的 25%
+     */
+    public set centerSize(centerSize: {
+        width: number,
+        height: number,
+    }) {
+        this.joystick.$set({'centerSize': centerSize});
+        // update size after ui update
+        this.joystick.$set({'updateing': true});
+    }
+    
+    /**
+     * 额外的摇杆样式，会附加到其他样式后面，可覆盖默认样式
+     */
+    public set extralJoystickStyle(extralJoystickStyle: string) {
+        this.joystick.$set({'extralJoystickStyle': extralJoystickStyle});
+        // update size after ui update
+        this.joystick.$set({'updateing': true});
+    }
+
+    /**
+     * 额外的摇杆中间按钮样式，会附加到其他样式后面，可覆盖默认样式
+     */
+    public set extralCenterStyle(extralCenterStyle: string) {
+        this.joystick.$set({'extralCenterStyle': extralCenterStyle});
+        // update size after ui update
+        this.joystick.$set({'updateing': true});
+    }
+
+    /**
+     * 摇杆的背景图片。最终设置为样式 background-image
+     */
+    public set joystickBackgroundUrl(joystickBackgroundUrl: string) {
+        this.joystick.$set({'joystickBackgroundUrl': joystickBackgroundUrl});
+        // update size after ui update
+        this.joystick.$set({'updateing': true});
+    }
+
+    /**
+     * 摇杆中间按钮的背景图片，最终设置为样式 background-image
+     */
+    public set centerBackgroundUrl(centerBackgroundUrl: string) {
+        this.joystick.$set({'centerBackgroundUrl': centerBackgroundUrl});
+        // update size after ui update
+        this.joystick.$set({'updateing': true});
+    }
+
+    /**
+     * 触发事件的时间间隔
+     */
+    public set repeatTimeout(repeatTimeout: number)  {
+        this.joystick.$set({'repeatTimeout': repeatTimeout});
+        // update size after ui update
+        this.joystick.$set({'updateing': true});
+    }
+
     private joystick: JoystickSvelte;
     private config: IJoystickConfig;
     /**
@@ -128,6 +238,28 @@ class Joystick {
      */
     public on(type: KJoystickEvents, callback: (e: any) => void) {
         this.joystick.$on(type, callback);
+    }
+
+    /**
+     * 显示摇杆
+     */
+    public show() {
+        this.joystick.show();
+    }
+
+    /**
+     * 隐藏摇杆
+     */
+    public hide() {
+        this.joystick.hide();
+    }
+
+    /**
+     * 刷新组件大小,当通过样式或其他方式影响到正摇杆大小的情况下
+     * 通知组件内部重新计算大小
+     */
+    public resize() {
+        this.joystick.resize();
     }
 
     /**

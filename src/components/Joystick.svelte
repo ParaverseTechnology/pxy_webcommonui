@@ -3,8 +3,11 @@
 <script lang="ts">
 import Log                       from "@/utils/log";
 import RepeatButton              from "./RepeatButton.svelte";
-import { onMount }               from "svelte";
-import { createEventDispatcher } from "svelte";
+import { 
+    onMount,
+    afterUpdate,
+    createEventDispatcher,
+}                                from "svelte";
 import Unit                      from '@/utils/unit';
 
 // 
@@ -25,6 +28,7 @@ export let centerBackgroundUrl = "";
 export let centerSize: undefined | null | { width: number, height: number } = null;
 export let repeatTimeout = 5;
 export let larksr: any = null;
+export let updateing: boolean = false;
 
 export const EVENTS_JOYSTICK_START        = "joystickstart";
 export const EVENTS_JOYSTICK_END          = "joystickend";
@@ -50,6 +54,8 @@ let vector: any = null;
 
 // joystick component
 let joystick: any = null;
+
+let isShow: boolean = true;
 
 // getters
 // from larksr state
@@ -94,8 +100,8 @@ function getJoystickPosition() {
 }
 
 // functions
-// events
-export function resize() {
+// export public functions;
+export function resize(init: boolean = true) {
     if (joystick && joystick.getRootElement()) {
         Log.info(
             "joystick size:",
@@ -107,13 +113,24 @@ export function resize() {
             width: joystick.getRootElement().clientWidth,
             height: joystick.getRootElement().clientHeight,
         };
-        joysickTouchesPosition = {
-            x: joystickElement.width / 2,
-            y: joystickElement.height / 2,
+        if (init) {
+            joysickTouchesPosition = {
+                x: joystickElement.width / 2,
+                y: joystickElement.height / 2,
+            }
         }
     }
 }
+export function show() {
+    isShow = true;
+    // update size when update ui finished
+    updateing = true;
+}
+export function hide() {
+    isShow = false;
+}
 
+// inner events
 function onJoyStickStart(event: any) {
     Log.info("onJoyStickStart", event);
 
@@ -189,6 +206,7 @@ function onJoyStickEnd(event: any) {
     // release all keys.
     for (let key of leftJoyStickKeys) {
         larksr?.keyUp(key);
+        Log.info("onJoyStickEnd release ", key);
     }
     leftJoyStickKeys = [];
 
@@ -342,7 +360,7 @@ function leftJoysStickKeyChannge(newKeys: any) {
             Log.info("press new key", newKeys[i]);
             larksr?.keyDown(newKeys[i], false);
         } else {
-            // Log.info("repeat key", newKeys[i]);
+            Log.info("repeat key", newKeys[i]);
             larksr?.keyDown(newKeys[i], true);
         }
     }
@@ -463,7 +481,16 @@ onMount(() => {
     resize();
 });
 
+afterUpdate(() => {
+    if (updateing) {
+        resize();
+        updateing = false;
+    }
+})
+
 function getJoystickStyle() {
+    let base = isShow ? "display: block;" : "display: none";
+
     let positionStyle = `position: absolute;top:${position ? position.top : 0}px;left:${position ? position.left : 0}px;z-index: 1500;`;
     let backgroundStyle = `background-size: cover; background-repeat: no-repeat; background-position: center;`;
     if (joystickBackgroundUrl) {
@@ -476,7 +503,7 @@ function getJoystickStyle() {
         sizeStyle = `width: ${size.width}px;height: ${size.height}px; border-radius: 50%;`;
     }
 
-    return positionStyle + backgroundStyle + sizeStyle + extralJoystickStyle;
+    return base + positionStyle + backgroundStyle + sizeStyle + extralJoystickStyle;
 }
 
 function getCenterStyle() {
@@ -496,14 +523,28 @@ function getCenterStyle() {
 
 <RepeatButton 
     bind:this={joystick}
-    style="{getJoystickStyle()}"
+    style="{
+        (isShow ? "display: block;" : "display: none;") +
+        `position: absolute;top:${position ? position.top : 0}px;left:${position ? position.left : 0}px;z-index: 1500;` +
+        "background-size: cover; background-repeat: no-repeat; background-position: center;" +
+        (joystickBackgroundUrl ? `background-image: url(${joystickBackgroundUrl});` : "") +
+        (size ? `width: ${size.width}px;height: ${size.height}px; border-radius: 50%;` : "width: 100%;height: 100%;") +
+        extralJoystickStyle
+    }"
     repeatTimeout={repeatTimeout}
     on:start={onJoyStickStart}
     on:move={onJoyStickMove}
     on:end={onJoyStickEnd}
     on:repeat={onJoyStickRepeat}
 >
-    <dvi class="center" style="left: {joysickTouchesPosition.x}px; top: {joysickTouchesPosition.y}px;{getCenterStyle()}">
+    <dvi class="center" style="left: {joysickTouchesPosition.x}px; top: {joysickTouchesPosition.y}px;{
+        (centerSize ? 
+            `width: ${centerSize.width}px;height: ${centerSize.height}px; border-radius: 50%; margin-top: ${-centerSize.width / 2}px; margin-left: ${-centerSize.height / 2}px;`
+            : "width: 25%;height: 25%; border-radius: 50%; margin-top: -12.5%; margin-left: -12.5%;") +
+        "background-size: cover; background-repeat: no-repeat; background-position: center;" +
+        (centerBackgroundUrl ? "background-image: url(${centerBackgroundUrl});" : "") +
+        getCenterStyle()
+    }">
     </dvi>
 </RepeatButton>
 

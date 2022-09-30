@@ -3,7 +3,8 @@
 * Joystick 组件，移动端模拟摇杆 UI，可配置 [larksr](https://www.npmjs.com/package/larksr_websdk) 对象自动对应相应的云端应用操作。
 
 ## 快速接入
-###  安装
+
+### 安装
 
 1. npm 方式
 
@@ -16,6 +17,7 @@ npm i pxy_webcommonui
 ```html
 <script src="pxy_webcommonui.min.js"></script>
 ```
+
 ### 使用
 
 #### 包名
@@ -121,6 +123,24 @@ this.joystick.on(KJoystickEvents.EVENTS_JOYSTICK_END, function(e) {
 
 > 配置 Joystick 样式有两种方式，一种是直接父组件的样式，如大小宽高，背景等，这种情况下不要设置 position，size 等影响 Joystick 组件内部的样式。
 > 另外一种是不设置父组件的样式，直接设置 position，size，extralJoystickStyle, joystickBackgroundUrl
+
+#### 其他接口
+
+```typescript
+/**
+ * 刷新组件大小,当通过样式或其他方式影响到正摇杆大小的情况下
+ * 通知组件内部重新计算大小
+ */
+public resize()
+/**
+ * 显示摇杆
+ */
+public show()
+/**
+ * 隐藏摇杆
+ */
+public hide()
+```
 
 ### 发送给云端的按键类型（WASD模式下）和左边对应关系
 
