@@ -53,7 +53,7 @@ export default class App extends React.Component {
 
     // setup sdk id.
     // YOUR SDKID
-    this.larksr.initSDKAuthCode('6b09421012994a2bba959b556fc2b78f')
+    this.larksr.initSDKAuthCode('YOUR SDKID')
     .then(() => {
       this.larksr.connect({
         // appliId: "904774812193259520",
