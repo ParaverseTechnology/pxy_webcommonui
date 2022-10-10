@@ -44,9 +44,9 @@ export default class App extends React.Component {
       rootElement: this.myRef.current, 
       fullScreenMode: 0,
       mobileFullScreenMode: 0,
-      serverAddress: "http://222.128.6.137:8181/",
+      // serverAddress: "http://222.128.6.137:8181/",
       // serverAddress: "http://222.128.6.137:8585/",
-      // serverAddress: "http://192.168.0.55:8181/",
+      serverAddress: "http://192.168.0.55:8181/",
       mobileForceLandscape: true,
       preferDecoder: 'auto'
     });
@@ -57,8 +57,9 @@ export default class App extends React.Component {
     .then(() => {
       this.larksr.connect({
         // appliId: "904774812193259520",
-        appliId: "879414254636105728", // people
-        // appliId: "1013814676569456640",
+        // appliId: "879414254636105728", // people
+        // appliId: "1012650157499482112", // people 55
+        appliId: "1013814676569456640",   // test
       })
       .then(() => {
         console.log('enter success');
@@ -154,7 +155,7 @@ export default class App extends React.Component {
       centerBackgroundUrl: JoystickTopImage,
 
       // 可选项，触发事件的时间间隔
-      repeatTimeout: 10,
+      repeatTimeout: 30,
     });
 
     // 通过属性配置
@@ -207,6 +208,18 @@ export default class App extends React.Component {
             this.joystick.hide();
           }}>
             hide
+          </button>          
+          
+          <button style={{position: 'absolute', zIndex: 2000, top: 150, left: 0}} onClick={() => {
+            this.larksr.op.startListening();
+          }}>
+            start listen
+          </button>          
+          
+          <button style={{position: 'absolute', zIndex: 2000, top: 175, left: 0}} onClick={() => {
+            this.larksr.op.stopListenling();
+          }}>
+            stop listen
           </button>
 
           <div ref={this.uiContainerRef} style = {{

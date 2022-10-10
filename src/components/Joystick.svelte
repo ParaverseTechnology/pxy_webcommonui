@@ -204,9 +204,13 @@ function onJoyStickEnd(event: any) {
 
     vector = null;
     // release all keys.
-    for (let key of leftJoyStickKeys) {
-        larksr?.keyUp(key);
-        Log.info("onJoyStickEnd release ", key);
+
+    for (let i = 0; i < leftJoyStickKeys.length; i++) {
+        let key = leftJoyStickKeys[i];
+        window.setTimeout(() => {
+            Log.info("onJoyStickEnd release ", key);
+            larksr?.keyUp(key);
+        }, 33 * i);
     }
     leftJoyStickKeys = [];
 
@@ -337,8 +341,11 @@ function leftJoysStickKeyChannge(newKeys: any) {
 
     for (let i = 0; i < oldKeys.length; i++) {
         if (oldKeyChannged[i]) {
-            Log.info("release old key ", oldKeys[i]);
-            larksr?.keyUp(oldKeys[i]);
+            let key = oldKeys[i];
+            window.setTimeout(() => {
+                larksr?.keyUp(key);
+                Log.info("release old key ", key);
+            }, 33 * i);
         }
     }
 
