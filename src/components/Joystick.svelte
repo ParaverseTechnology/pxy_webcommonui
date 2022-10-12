@@ -26,7 +26,7 @@ export let extralCenterStyle = "";
 export let joystickBackgroundUrl = "";
 export let centerBackgroundUrl = "";
 export let centerSize: undefined | null | { width: number, height: number } = null;
-export let repeatTimeout = 5;
+export let repeatTimeout = 33;
 export let larksr: any = null;
 export let updateing: boolean = false;
 

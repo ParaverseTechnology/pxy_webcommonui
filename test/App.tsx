@@ -155,7 +155,7 @@ export default class App extends React.Component {
       centerBackgroundUrl: JoystickTopImage,
 
       // 可选项，触发事件的时间间隔
-      repeatTimeout: 30,
+      repeatTimeout: 33,
     });
 
     // 通过属性配置

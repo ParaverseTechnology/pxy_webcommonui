@@ -45,7 +45,8 @@
                 // 服务器地址,实际使用中填写您的服务器地址
                 // 如：http://222.128.6.137:8181/
                 // 当使用平行云托管服务时服务器地址自动分配,可留空。
-                serverAddress: "http://222.128.6.137:8181/",
+                // serverAddress: "http://222.128.6.137:8181/",
+                serverAddress: "http://192.168.0.55:8181/",
                 // 授权码
                 // authCode: '您的 SDK ID 联系 business@pingxingyun.com 获取',
                 // 视频缩放模式，默认保留宽高比，不会拉伸并完整显示在容器中
@@ -80,7 +81,8 @@
                             // 参考查询应用一栏文档
                             // https://www.pingxingyun.com/online/api3_2.html?id=476
                             // 如 222.128.6.137:8181 系统下的 879414254636105728 应用
-                            appliId: "879414254636105728",
+                            // appliId: "879414254636105728",
+                            appliId: "1013814676569456640",
                         })
                         .catch(function (e) {
                             console.error('enter appli falied', e);
@@ -303,6 +305,8 @@
                 $("#rtmp-state").text(JSON.stringify(e.data));
             });
 
+            // test log
+            pxy_webcommonui.Log.logLevel = "info";
 
             // sample for pxy commonui 
             // create joystick
@@ -360,7 +364,7 @@
                 centerBackgroundUrl: "./img/joy_stick_top.png",
 
                 // 可选项，触发事件的时间间隔
-                repeatTimeout: 10,
+                repeatTimeout: 33,
             });
 
             // destroy joystick
@@ -398,9 +402,9 @@
         <!-- 演示 UI 层 -->
         <div class="ui">
             <div class="block">
-                <input placeholder="发送给云端数据通道" id="input-datachannel" type="text" />
+                <!-- <input placeholder="发送给云端数据通道" id="input-datachannel" type="text" />
                 <button id="button-datachannel">发送</button>
-                <p id="text-from-datachannel"></p>
+                <p id="text-from-datachannel"></p> -->
             </div>
             <div id="joystick-container" style="position: absolute; top: 0; left: 0;">
             </div>
