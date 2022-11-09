@@ -8,6 +8,8 @@ export let repeatTimeout: number = 5;
 export let keyName: string       = "";
 export let className: string     = "";
 export let style: string         = "";
+export let stopPropagation: boolean = true;
+export let preventDefault: boolean = true;
 export const EVENTS_START        = "start";
 export const EVENTS_END          = "end";
 export const EVENTS_MOVE         = "move";
@@ -29,8 +31,12 @@ export function getRootElement() {
 }
 
 function onTouchStart(e: Event) {
-    e.preventDefault();
-    e.stopPropagation();
+    if (preventDefault) {
+        e.preventDefault();
+    }
+    if (stopPropagation) {
+        e.stopPropagation();
+    }
     // this.showTip = true;
     touched = true;
     touchStartTime = Date.now();
@@ -42,8 +48,12 @@ function onTouchStart(e: Event) {
 }
 
 function onTouchEnd(e: Event) {
-    e.preventDefault();
-    e.stopPropagation();
+    if (preventDefault) {
+        e.preventDefault();
+    }
+    if (stopPropagation) {
+        e.stopPropagation();
+    }
     // console.log("onTouchEnd");
     // this.showTip = false;
     touched = false;
@@ -59,8 +69,12 @@ function onTouchEnd(e: Event) {
 }
 
 function onTouchMove(e: Event) {
-    e.preventDefault();
-    e.stopPropagation();
+    if (preventDefault) {
+        e.preventDefault();
+    }
+    if (stopPropagation) {
+        e.stopPropagation();
+    }
     // this.$emit("move", this.keyName, e);
     dispatch(EVENTS_MOVE, {
         keyName,
@@ -87,8 +101,12 @@ function repeatPress() {
 }
 
 function onSelect(e: Event) {
-    e.preventDefault();
-    e.stopPropagation();
+    if (preventDefault) {
+        e.preventDefault();
+    }
+    if (stopPropagation) {
+        e.stopPropagation();
+    }
 }
 </script>
 

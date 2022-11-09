@@ -29,6 +29,8 @@ export let centerSize: undefined | null | { width: number, height: number } = nu
 export let repeatTimeout = 33;
 export let larksr: any = null;
 export let updateing: boolean = false;
+export let stopPropagation: boolean = true;
+export let preventDefault: boolean = true;
 
 export const EVENTS_JOYSTICK_START        = "joystickstart";
 export const EVENTS_JOYSTICK_END          = "joystickend";
@@ -128,6 +130,20 @@ export function show() {
 }
 export function hide() {
     isShow = false;
+
+    // reset joystick state
+    if(subType && subType == 3) {
+       larksr?.joystick(0, 0, 0, 0, 0);
+    }
+    // release all keys.
+    for (let i = 0; i < leftJoyStickKeys.length; i++) {
+        let key = leftJoyStickKeys[i];
+        window.setTimeout(() => {
+            Log.info("onJoyStickEnd release ", key);
+            larksr?.keyUp(key);
+        }, 33 * i);
+    }
+    leftJoyStickKeys = [];
 }
 
 // inner events
@@ -221,11 +237,17 @@ function onJoyStickEnd(event: any) {
 }
 function onJoyStickRepeat(event: any) {
     // Log.info("onJoyStickRepeat");
+    if (!isShow) {
+        Log.info("skip event when hide component.");
+        return;
+    }
 
     if (vector == null) {
         return;
-     }
+    }
+
     const RADIUS = joystickElement.width / 2;
+
     if (vector.r < RADIUS / 4) {
         return;
     }
@@ -538,6 +560,8 @@ function getCenterStyle() {
         (size ? `width: ${size.width}px;height: ${size.height}px; border-radius: 50%;` : "width: 100%;height: 100%;") +
         extralJoystickStyle
     }"
+    stopPropagation={stopPropagation}
+    preventDefault={preventDefault}
     repeatTimeout={repeatTimeout}
     on:start={onJoyStickStart}
     on:move={onJoyStickMove}

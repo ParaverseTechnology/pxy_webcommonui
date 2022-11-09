@@ -43,7 +43,7 @@ export default class App extends React.Component {
     this.larksr = new LarkSR({
       rootElement: this.myRef.current, 
       fullScreenMode: 0,
-      mobileFullScreenMode: 0,
+      mobileFullScreenMode: 1,
       // serverAddress: "http://222.128.6.137:8181/",
       // serverAddress: "http://222.128.6.137:8585/",
       serverAddress: "http://192.168.0.55:8181/",
@@ -156,6 +156,12 @@ export default class App extends React.Component {
 
       // 可选项，触发事件的时间间隔
       repeatTimeout: 33,
+
+      // 是否阻止事件冒泡
+      stopPropagation: false,
+
+      // 是否阻止默认事件
+      preventDefault: false,
     });
 
     // 通过属性配置
@@ -199,24 +205,24 @@ export default class App extends React.Component {
   render() {
       return (
         <div ref={this.myRef} style={{ position: 'relative', width: '100%', height: '100%' }}>
-          <button style={{position: 'absolute', zIndex: 2000, top: 100, left: 0}} onClick={() => {
+          <button style={{position: 'absolute', zIndex: 2000, top: 100, left: 0}} onTouchEnd={() => {
             this.joystick.show();
           }}>
             show
           </button>          
-          <button style={{position: 'absolute', zIndex: 2000, top: 125, left: 0}} onClick={() => {
+          <button style={{position: 'absolute', zIndex: 2000, top: 125, left: 0}} onTouchEnd={() => {
             this.joystick.hide();
           }}>
             hide
           </button>          
           
-          <button style={{position: 'absolute', zIndex: 2000, top: 150, left: 0}} onClick={() => {
+          <button style={{position: 'absolute', zIndex: 2000, top: 150, left: 0}} onTouchEnd={() => {
             this.larksr.op.startListening();
           }}>
             start listen
           </button>          
           
-          <button style={{position: 'absolute', zIndex: 2000, top: 175, left: 0}} onClick={() => {
+          <button style={{position: 'absolute', zIndex: 2000, top: 175, left: 0}} onTouchEnd={() => {
             this.larksr.op.stopListenling();
           }}>
             stop listen
