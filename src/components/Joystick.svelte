@@ -363,8 +363,8 @@ function leftJoysStickKeyChannge(newKeys: any) {
 
     for (let i = 0; i < oldKeys.length; i++) {
         if (oldKeyChannged[i]) {
-            let key = oldKeys[i];
             window.setTimeout(() => {
+                let key = oldKeys[i];
                 larksr?.keyUp(key);
                 Log.info("release old key ", key);
             }, 33 * i);
