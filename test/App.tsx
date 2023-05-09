@@ -9,6 +9,7 @@ const {
 import PxyCommonUI from '../src/index';
 const { 
   Joystick, 
+  Keyboard,
   KJoystickEvents,
   KJoystickSubTypes,
   Log
@@ -20,6 +21,7 @@ import JoystickTopImage from './assets/joy_stick_top.png';
 export default class App extends React.Component {
   private myRef;
   private uiContainerRef;
+  private uiKeyboardRef;
   private larksr: InstanceType<typeof LarkSR>;
   private vConsole: VConsole | null = null;
   private state: any = {
@@ -29,15 +31,17 @@ export default class App extends React.Component {
     },
   };
   private joystick: InstanceType<typeof Joystick>;
+  private keyboard: InstanceType<typeof Keyboard>;
 
   constructor(props) {
     super(props);
     this.myRef = React.createRef();
     this.uiContainerRef = React.createRef();
+    this.uiKeyboardRef = React.createRef();
   }
   componentDidMount() {
     Log.logLevel = "info";
-    this.vConsole = new VConsole();
+    // this.vConsole = new VConsole();
 
     // create with config.
     this.larksr = new LarkSR({
@@ -58,8 +62,8 @@ export default class App extends React.Component {
       this.larksr.connect({
         // appliId: "904774812193259520",
         // appliId: "879414254636105728", // people
-        // appliId: "1012650157499482112", // people 55
-        appliId: "1013814676569456640",   // test
+        appliId: "925773094113509376", // people 55
+        // appliId: "1013814676569456640",   // test
       })
       .then(() => {
         console.log('enter success');
@@ -164,6 +168,15 @@ export default class App extends React.Component {
       preventDefault: false,
     });
 
+    this.keyboard = new Keyboard({
+      // 必填项，挂载的根元素
+      rootElement: this.uiKeyboardRef.current, 
+      larksr: this.larksr,
+      language: 'en'
+    })
+    this.keyboard.on('keyboardVal', (e:any)=>{
+      console.log('e',e.detail)
+    })
     // 通过属性配置
     // this.joystick.larksr = this.larksr;
     // this.joystick.subType = 1;
@@ -228,6 +241,18 @@ export default class App extends React.Component {
             stop listen
           </button>
 
+          
+          <button style={{position: 'absolute', zIndex: 2000, top: 50, left: 0}} onTouchEnd={() => {
+            this.keyboard.show();
+          }}>
+            keyboard show
+          </button>          
+          <button style={{position: 'absolute', zIndex: 2000, top: 75, left: 0}} onTouchEnd={() => {
+            this.keyboard.hide();
+          }}>
+            keyboard hide
+          </button> 
+
           <div ref={this.uiContainerRef} style = {{
               position: 'absolute', 
               zIndex: 2000, 
@@ -241,6 +266,13 @@ export default class App extends React.Component {
               // backgroundSize: 'cover',
             }}>
           </div>
+
+          <div ref={this.uiKeyboardRef} style={{
+            position: 'absolute', 
+            zIndex: 2000, 
+            bottom: 0,
+            width: '100%',
+          }}></div>
         </div>
     );
   }

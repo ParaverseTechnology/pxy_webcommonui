@@ -146,6 +146,41 @@ public hide()
 
 ![](./doc/wasd.png)
 
+#### Keyboard 组件
+
+此处以 `import` 进来对象为例:
+
+```typescript
+this.keyboard = new Keyboard({
+    // 必填项，挂载的根元素
+    rootElement: this.uiKeyboardRef.current, 
+    
+    // 必填项
+    larksr: this.larksr,
+
+    // zh en
+    language: 'En'
+});
+```
+
+
+```typescript
+// 虚拟键盘显示
+this.keyboard.show();
+
+// 虚拟键盘隐藏
+this.keyboard.hide();
+```
+
+手动监听事件,返回键盘输入内容
+
+```typescript
+this.joystick.on('keyboardVal', function(e) {
+    console.log('e',e.detail);
+});
+```
+
+
 ## 调试源码
 
 1. 运行 test 项目, [./test/App.tsx](./test/App.tsx) 中配置好 larksr 的相关参数。

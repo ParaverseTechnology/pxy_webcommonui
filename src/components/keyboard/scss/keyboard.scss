@@ -1,0 +1,190 @@
+// *****************************************************base.scss
+/* colors */
+$color-bg-trans01-black: rgba(0, 0, 0, 0.1);
+$color-bg-trans20-light-blue: rgba(185, 203, 255, 0.2);
+$color-bg-trans40-light-blue: rgba(185, 203, 255, 0.4);
+$color-bg-light-blue: rgba(185, 203, 255, 1.0);
+$color-bg-trans40-blue: rgba(18, 37, 95, 0.4);
+$color-bg-trans80-blue: rgba(18, 37, 95, 0.8);
+$color-bg-blue: rgba(18, 37, 95, 1.0);
+$color-border-trans20-light-blue: rgba(46, 100, 255, 0.2);
+$color-border-trans40-light-blue: rgba(46, 100, 255, 0.4);
+$color-border-trans80-light-blue: rgba(46, 100, 255, 0.8);
+$color-border-light-blue: rgba(46, 100, 255, 0.8);
+$color-font-blue: #acc1ff;
+
+/* z-index */
+$z-index-index: 1010;
+$z-index-menu: 1100;
+$z-index-modal: 1200;
+
+$ue-width: 1340; /* ue图的宽度 */
+@function px2rem($px) {
+  @return #{calc($px/$ue-width*100)}rem;
+}
+
+$keyWidth: 90;
+$keyHeight: 50;
+$keyGap: 7;
+.keyboard {
+    width: 100%;
+    position: fixed;
+    bottom: 0;
+    z-index: $z-index-index + 3;
+    background-color: $color-bg-trans40-blue;
+    border-top: px2rem(2) solid $color-border-trans40-light-blue;
+    border-top-left-radius: px2rem(10);
+    border-top-right-radius: px2rem(10);
+    padding-top: px2rem(12);
+    box-sizing: border-box;
+    text-align: center;
+    .search-box {
+        margin-bottom: 5px;
+        input[type=text]::placeholder {
+            color: #fff;
+        }
+        .search-input:focus {
+            border: 1px solid $color-border-trans40-light-blue;
+        }
+        .search-input {
+            width: px2rem($keyWidth * 10+$keyGap*8);
+            height: px2rem(45);
+            background-color: $color-bg-trans20-light-blue;
+            border: 1px solid #fff;
+            border-radius: px2rem(10);
+            color: #fff;
+            margin-right: px2rem($keyGap);
+            padding: 0 px2rem(10);
+            box-sizing: border-box;
+            font-size: px2rem(22);
+        }
+        .search-input-btn {
+            width: px2rem($keyWidth * 2+$keyGap);
+            height: px2rem(45);
+            background-color: $color-bg-trans20-light-blue;
+            border-radius: px2rem(5);
+            color: #fff;
+            border: none;
+            vertical-align: middle;
+        }
+    }
+    .icon-close {
+        width: px2rem(40);
+        height: px2rem(40);
+        position: absolute;
+        right: px2rem(12);
+        top: px2rem(7);
+        border-radius: px2rem(4);
+        background-color: $color-bg-trans40-blue;
+        img {
+            width: 100%;
+            height: 100%;
+        }
+    }
+    .icon-input {
+        width: px2rem(40);
+        height: px2rem(40);
+        line-height: px2rem(40);
+        text-align: center;
+        position: absolute;
+        color: #fff;
+        right: px2rem(12);
+        top: px2rem(60);
+        border-radius: px2rem(5);
+        font-size: px2rem(22);
+        background-color: $color-bg-trans40-blue;
+    }
+    .row {
+        max-width: 90%;
+        margin: 0 auto;
+        margin-bottom: px2rem(7);
+        &-content {
+            margin: 0 auto;
+            width: 95%;
+        }
+        .capslock {
+            width: px2rem(5);
+            height: px2rem(5);
+            border-radius: px2rem(5);
+            position: absolute;
+            left: px2rem(3);
+            top: px2rem(3);
+        }
+        .capslock.capslock-lock {
+            background-color: lightgreen;
+        }
+        .capslock.capslock-unlock {
+            background-color: lightgray;
+        }
+        .shiftlock {
+            width: px2rem(5);
+            height: px2rem(5);
+            border-radius: px2rem(5);
+            position: absolute;
+        }
+        .shiftlock.shiftlock-left {
+            right: px2rem(10);
+            top: px2rem(5);
+        }
+        .shiftlock.shiftlock-right {
+            left: px2rem(10);
+            top: px2rem(5);
+        }
+        .shiftlock.shiftlock-lock {
+            background-color: lightgreen;
+        }
+        .shiftlock.shiftlock-unlock {
+            background-color: lightgray;
+        }
+        // .icon-shift {
+            // width: px2rem(26);
+            // height: px2rem(30);
+        // }
+        // .icon-enter, .icon-delete {
+            // width: px2rem(27);
+            // height: px2rem(20);
+        // }
+        .key-align-left {
+            text-align: left;
+            padding-left: px2rem(7);
+            height: 100%;
+        }
+        .key-align-left img {
+            max-height: px2rem($keyHeight);
+            position: relative;
+            top: 50%;
+            transform: translateY(-50%) scale(.7);
+        }
+        // .key-blank {
+            // width: px2rem(28);
+            // height: px2rem(9);
+        // }
+        .key-align-right {
+            text-align: right;
+            padding-right: px2rem(7);
+            height: 100%;
+            img {
+                max-height: px2rem($keyHeight);
+                position: relative;
+                top: 50%;
+                transform: translateY(-50%) scale(.7);
+
+            }
+        }
+        // 
+        .upTag {
+            position: absolute;
+            top: px2rem(2);
+            right: px2rem(5);
+            line-height: 1;
+            display: inline-block;
+            font-size: px2rem(16);
+        }
+    }
+}
+// .keyboard-cloud {
+    // height: px2rem(310);
+// }
+// .keyboard-web {
+    // height: px2rem(255);
+// }
