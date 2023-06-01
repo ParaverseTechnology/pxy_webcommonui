@@ -47,7 +47,7 @@ $: keybaordClass = 'keyboard';
 onMount(async () => {
   resize();
   simpleInputMethod.init('.test-input-method');
-  console.log('.params.language',larksr.params.language)
+  // console.log('.params.language',larksr.params.language)
 });
 onDestroy(unsubscribe);
 
@@ -64,7 +64,7 @@ function resize() {
       //         getViewPort().width;
       let screenW = getViewPort().width;
       let pixUnit = screenW / 100;
-      console.log(pixUnit,getViewPort())
+      // console.log(pixUnit,getViewPort())
       if (Capabilities.isMobile) {
           // resize rem.
           document.documentElement.style.fontSize = pixUnit + 'px';
@@ -194,8 +194,9 @@ export function show() {
   isShow = true;
 }
 export function hide() {
-  isShow = false;
   inputValue = '';
+  word_val.update((n:string)=> n = '');
+  isShow = false;
 }
 </script>
 <div style="{(isShow ? "display: block;" : "display: none;")}">

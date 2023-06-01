@@ -41,7 +41,6 @@ export class SimpleInputMethod {
 	initDict(): void {
 		var dict = this.pinyinUtil.dict;
 		this.pinyinUtil.parseDict();
-		console.log(this.pinyinUtil)
 		if(!dict.py2hz) throw '未找到合适的字典文件！';
 		// 这一步仅仅是给字母a-z扩充，例如根据b找不到相关汉字，就把bi的结果赋值给b
 		// 当然这种方式只是很简单的实现，真正的拼音输入法肯定不能这么简单处理
@@ -106,13 +105,12 @@ export class SimpleInputMethod {
 		this._pinyinTarget = document.querySelector('#simle_input_method .pinyin');
 		this._resultTarget = document.querySelector('#simle_input_method .result ol');
 		var that = this;
-		console.log('obj',obj)
 		for(var i=0; i<obj.length; i++)
 		{
 			obj[i].addEventListener('keydown', function(e: any)
 			{
 				var keyCode = e.keyCode;
-				console.log(keyCode,'keyCode')
+				// console.log(keyCode,'keyCode')
 				var preventDefault = false;
 				if(keyCode >= 65 && keyCode <= 90) // A-Z
 				{

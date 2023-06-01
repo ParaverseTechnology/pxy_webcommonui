@@ -175,7 +175,7 @@ this.keyboard.hide();
 手动监听事件,返回键盘输入内容
 
 ```typescript
-this.joystick.on('keyboardVal', function(e) {
+this.keyboard.on('keyboardVal', function(e) {
     console.log('e',e.detail);
 });
 ```
