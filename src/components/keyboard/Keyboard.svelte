@@ -141,7 +141,7 @@ function onKeyEnd(keyValue: any) {
 function onRepeat(keyValue: any) {
   let key = keyValue.detail;
   Log.info("onRepeat", key)
-  larksr.keyUp(key, true);
+  larksr.keyDown(key, true);
 }
 function sendText() {
   if (larksr) {
