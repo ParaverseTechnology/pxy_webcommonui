@@ -172,7 +172,7 @@ export default class App extends React.Component {
       // 必填项，挂载的根元素
       rootElement: this.uiKeyboardRef.current, 
       larksr: this.larksr,
-      language: 'en'
+      language: 'tw' // 除了zh以外都视为en
     })
     this.keyboard.on('keyboardVal', (e:any)=>{
       console.log('e',e.detail)

@@ -12,7 +12,7 @@ import { createEventDispatcher } from 'svelte';
 
 
 export let larksr: any = null;
-export let language: string = 'zh';
+export let language: string = '';
 export const EVENTS_KEYBOARD_VAL = "keyboardVal";
 const closeWhite = require('../../img/close_white.svg');
 const keyDelete = require('../../img/key_delete.png');
@@ -47,7 +47,10 @@ $: keybaordClass = 'keyboard';
 onMount(async () => {
   resize();
   simpleInputMethod.init('.test-input-method');
-  // console.log('.params.language',larksr.params.language)
+  if(larksr.params.language && !language) {
+    language = larksr.params.language;
+    switchKeyboardText= language==='zh'?'En':'中';
+  }
 });
 onDestroy(unsubscribe);
 
