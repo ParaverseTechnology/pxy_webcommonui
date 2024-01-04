@@ -12,6 +12,15 @@ $color-border-trans40-light-blue: rgba(46, 100, 255, 0.4);
 $color-border-trans80-light-blue: rgba(46, 100, 255, 0.8);
 $color-border-light-blue: rgba(46, 100, 255, 0.8);
 $color-font-blue: #acc1ff;
+// new UI black
+$color-b-panel-bg: #454545;
+$color-b-key-bg: #1D1B20;
+$color-b-key-font-color: #E6E0E9;
+
+// new UI white
+$color-w-panel-bg: #FAFAFA;
+$color-w-key-bg: #EEE;
+$color-w-key-font-color: #1D1B20;
 
 /* z-index */
 $z-index-index: 1010;
@@ -26,20 +35,37 @@ $ue-width: 1340; /* ue图的宽度 */
 $keyWidth: 90;
 $keyHeight: 50;
 $keyGap: 7;
+$circleR: 40;
 .keyboard {
     width: 100%;
     position: fixed;
     bottom: 0;
     z-index: $z-index-index + 3;
-    background-color: $color-bg-trans40-blue;
-    border-top: px2rem(2) solid $color-border-trans40-light-blue;
     border-top-left-radius: px2rem(10);
     border-top-right-radius: px2rem(10);
     padding-top: px2rem(12);
     box-sizing: border-box;
     text-align: center;
+    -webkit-touch-callout:none; /*系统默认菜单被禁用*/
+    -webkit-user-select:none; /*webkit浏览器*/
+    -khtml-user-select:none; /*早期浏览器*/
+    -moz-user-select:none;/*火狐*/
+    -ms-user-select:none; /*IE10*/
+    user-select:none;
+    .keyboard-type-key {
+        display: inline-block;
+        width: px2rem($keyWidth);
+        margin-left: px2rem($keyGap);
+    }
     .search-box {
+        width: px2rem($keyWidth*12 + $keyGap*12);
+        margin: 0 auto;
         margin-bottom: 5px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-left: px2rem($keyGap);
+        box-sizing: border-box;
         input[type=text]::placeholder {
             color: #fff;
         }
@@ -47,38 +73,27 @@ $keyGap: 7;
             border: 1px solid $color-border-trans40-light-blue;
         }
         .search-input {
-            width: px2rem($keyWidth * 10+$keyGap*8);
+            width: 100%;
             height: px2rem(45);
-            background-color: $color-bg-trans20-light-blue;
+            background-color: #fff;
             border: 1px solid #fff;
             border-radius: px2rem(10);
-            color: #fff;
-            margin-right: px2rem($keyGap);
             padding: 0 px2rem(10);
             box-sizing: border-box;
             font-size: px2rem(22);
+            color: $color-w-key-font-color;
         }
-        .search-input-btn {
-            width: px2rem($keyWidth * 2+$keyGap);
-            height: px2rem(45);
-            background-color: $color-bg-trans20-light-blue;
-            border-radius: px2rem(5);
-            color: #fff;
-            border: none;
-            vertical-align: middle;
+        input:disabled {
+            opacity: 1;
+            background-color: #fff!important;
         }
     }
-    .icon-close {
-        width: px2rem(40);
-        height: px2rem(40);
+    .keyboard-icon-close {
         position: absolute;
-        right: px2rem(12);
-        top: px2rem(7);
-        border-radius: px2rem(4);
-        background-color: $color-bg-trans40-blue;
-        img {
-            width: 100%;
-            height: 100%;
+        right: px2rem(30);
+        top: px2rem(12);
+        svg {
+            font-size: px2rem(40);
         }
     }
     .icon-input {
@@ -136,14 +151,6 @@ $keyGap: 7;
         .shiftlock.shiftlock-unlock {
             background-color: lightgray;
         }
-        // .icon-shift {
-            // width: px2rem(26);
-            // height: px2rem(30);
-        // }
-        // .icon-enter, .icon-delete {
-            // width: px2rem(27);
-            // height: px2rem(20);
-        // }
         .key-align-left {
             text-align: left;
             padding-left: px2rem(7);
@@ -155,10 +162,6 @@ $keyGap: 7;
             top: 50%;
             transform: translateY(-50%) scale(.7);
         }
-        // .key-blank {
-            // width: px2rem(28);
-            // height: px2rem(9);
-        // }
         .key-align-right {
             text-align: right;
             padding-right: px2rem(7);
@@ -182,9 +185,95 @@ $keyGap: 7;
         }
     }
 }
-// .keyboard-cloud {
-    // height: px2rem(310);
-// }
-// .keyboard-web {
-    // height: px2rem(255);
-// }
+
+// 暗色
+.dark.keyboard {
+    background-color: $color-b-panel-bg;
+    .key {
+        background-color: $color-b-key-bg;
+        color: $color-b-key-font-color;
+        .tip {
+            background-color: $color-w-key-bg;
+            color: $color-w-key-font-color;
+            svg {
+                font-size: px2rem($keyHeight);
+                color: $color-w-key-font-color;
+            }
+        }
+        svg {
+            font-size: px2rem($keyHeight);
+            color: $color-b-key-font-color;
+        }
+    }
+    .key.close {
+        background-color: transparent;
+        >div {
+            width: px2rem($circleR);
+            height: px2rem($circleR);
+            background-color: $color-w-key-bg;
+            border-radius: 50%;
+            position:relative;
+        }
+        svg {
+            height: px2rem($circleR);
+            line-height: px2rem($circleR);
+            font-size: px2rem($circleR - 12);
+            color: $color-w-key-font-color;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-55%, -50%);
+        }
+    }
+    .keyboard-icon-close {
+        svg {
+            color: $color-b-key-font-color;
+        }
+    }
+}
+//亮色
+.light.keyboard {
+    background-color: $color-w-panel-bg;
+    .key {
+        background-color: $color-w-key-bg;
+        color: $color-w-key-font-color;
+        .tip {
+            background-color: $color-b-key-bg;
+            color: $color-b-key-font-color;
+            svg {
+                font-size: px2rem($keyHeight);
+                color: $color-b-key-font-color;
+            }
+        }
+        svg {
+            font-size: px2rem($keyHeight);
+            color: $color-w-key-font-color;
+        }
+    }
+    .key.close {
+        background-color: transparent;
+        >div {
+            width: px2rem($circleR);
+            height: px2rem($circleR);
+            background-color: $color-b-key-bg;
+            border-radius: 50%;
+            position:relative;
+        }
+        svg {
+            height: px2rem($circleR);
+            line-height: px2rem($circleR);
+            font-size: px2rem($circleR - 12);
+            color: $color-b-key-font-color;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-55%, -50%);
+        }
+    }
+    
+    .keyboard-icon-close {
+        svg {
+            color: $color-w-key-font-color;
+        }
+    }
+}

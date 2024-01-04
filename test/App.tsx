@@ -57,7 +57,7 @@ export default class App extends React.Component {
 
     // setup sdk id.
     // YOUR SDKID
-    this.larksr.initSDKAuthCode('YOUR SDKID')
+    this.larksr.initSDKAuthCode('5966b6569bec4f879322a8c91f2f2cd4')
     .then(() => {
       this.larksr.connect({
         // appliId: "904774812193259520",
@@ -172,7 +172,8 @@ export default class App extends React.Component {
       // 必填项，挂载的根元素
       rootElement: this.uiKeyboardRef.current, 
       larksr: this.larksr,
-      language: 'tw' // 除了zh以外都视为en
+      language: 'en', // 除了zh以外都视为en
+      theme: 'dark' //dark light
     })
     this.keyboard.on('keyboardVal', (e:any)=>{
       console.log('e',e.detail)

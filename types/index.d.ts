@@ -1,5 +1,6 @@
 import 'core-js/stable/symbol';
 import './components/keyboard/js/simple-input-method';
+import './iconfont/iconfont';
 import { Joystick, KJoystickEvents, KJoystickSubTypes } from './joystick';
 import { Keyboard } from './keyboard';
 import type { IJoystickConfig } from './joystick';

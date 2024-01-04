@@ -18,7 +18,13 @@ export interface IKeyboardConfig {
      * en
      * zh
      */
-    language?: string
+    language?: string,
+    /**
+     * 键盘主题色
+     * dark
+     * light
+     */
+    theme?: string
 }
 
 

@@ -1,6 +1,6 @@
 {
   "name": "pxy_webcommonui",
-  "version": "0.1.12",
+  "version": "0.1.14",
   "description": "common ui components for pxy cloudrending.",
   "keywords": [
     "pingxingyun",
@@ -41,7 +41,7 @@
     "fork-ts-checker-webpack-plugin": "^6.3.3",
     "html-loader": "^3.0.1",
     "html-webpack-plugin": "^5.3.2",
-    "larksr_websdk": "3.2.342",
+    "larksr_websdk": "^3.2.403",
     "less-loader": "^10.0.1",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",

@@ -17,6 +17,12 @@ export interface IKeyboardConfig {
      * zh
      */
     language?: string;
+    /**
+     * 键盘主题色
+     * dark
+     * light
+     */
+    theme?: string;
 }
 declare class Keyboard {
     /**

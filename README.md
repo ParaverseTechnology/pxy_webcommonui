@@ -161,7 +161,9 @@ this.keyboard = new Keyboard({
     larksr: this.larksr,
 
     // zh en
-    language: 'En'
+    language: 'En',
+
+    theme: 'dark'
 });
 ```
 

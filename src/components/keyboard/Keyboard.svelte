@@ -14,11 +14,7 @@ import { createEventDispatcher } from 'svelte';
 export let larksr: any = null;
 export let language: string = '';
 export const EVENTS_KEYBOARD_VAL = "keyboardVal";
-const closeWhite = require('../../img/close_white.svg');
-const keyDelete = require('../../img/key_delete.png');
-const keyEnter = require('../../img/key_enter.png');
-const keyShift = require('../../img/key_shift.png');
-const keyBlank = require('../../img/key_blank.png');
+export let theme: string = 'dark';
 
 const dispatch = createEventDispatcher();
 let simpleInputMethod: SimpleInputMethod = new SimpleInputMethod();
@@ -42,7 +38,7 @@ $: showUpCase = shift || capsLock;
 $: capsLockClass = capsLock ? "capslock capslock-lock" : "capslock capslock-unlock";
 $: leftShiftLockClass = shiftLock ? "shiftlock shiftlock-lock shiftlock-left" : "shiftlock shiftlock-unlock shiftlock-left";
 $: rightShiftLockClass = shiftLock ? "shiftlock shiftlock-lock shiftlock-right" : "shiftlock shiftlock-unlock shiftlock-right";
-$: keybaordClass = 'keyboard';
+$: keybaordClass = theme==='light'?'keyboard light':'keyboard dark';
 
 onMount(async () => {
   resize();
@@ -204,17 +200,16 @@ export function hide() {
 </script>
 <div style="{(isShow ? "display: block;" : "display: none;")}">
   <div id="keyboard" class={keybaordClass}>
-    <div class="icon-close" on:click={toggleVKeyboard}>
-      <img src={closeWhite.default} alt=""/>
-    </div>
-    <div class="icon-input" on:click={switchZhOrEn}>
-      { switchKeyboardText }
+    <div class="keyboard-icon-close" on:click={toggleVKeyboard}>
+      <svg class="icon" aria-hidden="true">
+        <use xlink:href="#icon-guanbi"></use>
+      </svg>
     </div>
     {#if switchKeyboardText==='En'}
-      <div class="search-box">
-        <input disabled bind:value={inputValue} type="text" class="search-input test-input-method" placeholder="请输入">
-        <button class="search-input-btn" on:click={sendText}>发送</button>
-      </div>
+    <div class="search-box">
+      <input disabled bind:value={inputValue} type="text" class="search-input test-input-method" placeholder="请输入">
+    </div>
+      <!-- <button class="search-input-btn" on:click={sendText}>发送</button> -->
       <!-- letter row 1 -->
       <div class="row">
         <!-- tab -->
@@ -229,7 +224,9 @@ export function hide() {
           {/if}
         </Key>{/each}<Key size="x1" on:start={onKeyStart} on:end={onKeyEnd} on:repeat={onRepeat} keyName="Backspace">
           <div class="key-align-right">
-            <img class="icon-delete" src={keyDelete.default} alt="">
+            <svg class="icon" aria-hidden="true">
+              <use xlink:href="#icon-jianpanshanchu"></use>
+            </svg>
           </div>
         </Key>
         <!-- backspace end -->
@@ -255,7 +252,9 @@ export function hide() {
             {/if}
           </Key>{/each}<Key size="x2" keyName="Enter" on:start={onKeyStart} on:end={onKeyEnd} on:repeat={onRepeat}>
             <div class="key-align-right">
-                <img class="icon-enter" src={keyEnter.default} alt="">
+              <svg class="icon" aria-hidden="true">
+                <use xlink:href="#icon-16gl-enter2"></use>
+              </svg>
             </div>
           </Key>
         <!-- enter end -->
@@ -266,7 +265,9 @@ export function hide() {
           <Key size="x2" on:start={shiftStart} on:end={shiftEnd} on:longPress={longPressShift} on:repeat={onRepeat} keyName="ShiftLeft" >
               <div class="key-align-left">
                   <div class={leftShiftLockClass}></div>
-                  <img class="icon-shift" src={keyShift.default} alt="">
+                  <svg class="icon" aria-hidden="true">
+                    <use xlink:href="#icon-jianpan-shift"></use>
+                  </svg>
               </div>
           </Key>{#each LetterKeyMap[2] as key, keyIndex}
           <Key on:start={onKeyStart} on:end={onKeyEnd} on:repeat={onRepeat} keyName={key}>
@@ -291,27 +292,31 @@ export function hide() {
                 <span class="upTag">.</span>
               </div>
             {/if}
-          </Key><Key size="x2" on:start={shiftStart} on:end={shiftEnd} on:longPress={longPressShift} on:repeat={onRepeat}
-              keyName="ShiftRight">
+          </Key><Key size="x2" on:end={switchZhOrEn} keyName={ switchKeyboardText }>
               <div class="key-align-right">
-                  <div class={rightShiftLockClass}></div>
-                  <img class="icon-shift" src={keyShift.default} alt="">
+                <div class="keyboard-lan">
+                  { switchKeyboardText }&nbsp;
+                </div>
               </div>
           </Key>
       </div>
       <!-- letter row 4 -->
       <div class="row">
         <Key size="all" keyName="Space" on:start={onKeyStart} on:end={onKeyEnd} on:repeat={onRepeat}>
-          <img class="key-blank" src={keyBlank.default} alt="">
+          <svg class="icon" aria-hidden="true">
+            <use xlink:href="#icon-kongge"></use>
+          </svg>
         </Key>
       </div>
     {:else}
       {#if letterKeyboard}
         <!-- letter row 1 -->
         <div class="row">
-          <!-- tab -->
+          <!-- Tab -->
           <Key size="x1" keyName="Tab" on:start={onKeyStart} on:end={onKeyEnd} on:repeat={onRepeat}>
-            <div class="key-align-left">Tab</div>
+            <div class="key-align-left">
+                Tab
+            </div>
           </Key>{#each LetterKeyMap[0] as key, keyIndex}
           <Key on:start={onKeyStart} on:end={onKeyEnd} on:repeat={onRepeat} keyName={key}>
             {#if showUpCase}
@@ -321,7 +326,9 @@ export function hide() {
             {/if}
           </Key>{/each}<Key size="x1" on:start={onKeyStart} on:end={onKeyEnd} on:repeat={onRepeat} keyName="Backspace">
             <div class="key-align-right">
-              <img class="icon-delete" src={keyDelete.default} alt="">
+              <svg class="icon" aria-hidden="true">
+                <use xlink:href="#icon-jianpanshanchu"></use>
+              </svg>
             </div>
           </Key>
           <!-- backspace end -->
@@ -347,7 +354,9 @@ export function hide() {
               {/if}
             </Key>{/each}<Key size="x2" keyName="Enter" on:start={onKeyStart} on:end={onKeyEnd} on:repeat={onRepeat}>
               <div class="key-align-right">
-                  <img class="icon-enter" src={keyEnter.default} alt="">
+                <svg class="icon" aria-hidden="true">
+                  <use xlink:href="#icon-16gl-enter2"></use>
+                </svg>
               </div>
             </Key>
           <!-- enter end -->
@@ -358,7 +367,9 @@ export function hide() {
             <Key size="x2" on:start={shiftStart} on:end={shiftEnd} on:longPress={longPressShift} on:repeat={onRepeat} keyName="ShiftLeft" >
                 <div class="key-align-left">
                     <div class={leftShiftLockClass}></div>
-                    <img class="icon-shift" src={keyShift.default} alt="">
+                    <svg class="icon" aria-hidden="true">
+                      <use xlink:href="#icon-jianpan-shift"></use>
+                    </svg>
                 </div>
             </Key>{#each LetterKeyMap[2] as key, keyIndex}
             <Key on:start={onKeyStart} on:end={onKeyEnd} on:repeat={onRepeat} keyName={key}>
@@ -383,11 +394,11 @@ export function hide() {
                   <span class="upTag">.</span>
                 </div>
               {/if}
-            </Key><Key size="x2" on:start={shiftStart} on:end={shiftEnd} on:longPress={longPressShift} on:repeat={onRepeat}
-                keyName="ShiftRight">
+            </Key><Key size="x2" on:end={switchZhOrEn} keyName={switchKeyboardText}>
                 <div class="key-align-right">
-                    <div class={rightShiftLockClass}></div>
-                    <img class="icon-shift" src={keyShift.default} alt="">
+                  <div class="keyboard-lan">
+                    { switchKeyboardText }&nbsp;
+                  </div>
                 </div>
             </Key>
         </div>
@@ -405,12 +416,14 @@ export function hide() {
             </Key><Key size="x1" keyName="AltLeft" on:start={onKeyStart} on:end={onKeyEnd} on:repeat={onRepeat}>
               Alt L
             </Key><Key size="x4" keyName="Space" on:start={onKeyStart} on:end={onKeyEnd} on:repeat={onRepeat}>
-              <img class="key-blank" src={keyBlank.default} alt="">
+              <svg class="icon" aria-hidden="true">
+                <use xlink:href="#icon-kongge"></use>
+              </svg>
             </Key><Key size="x1" keyName="AltRight" on:start={onKeyStart} on:end={onKeyEnd} on:repeat={onRepeat}>
               Alt R
             </Key><Key size="x2" keyName="ControlRight" on:start={onKeyStart} on:end={onKeyEnd} on:repeat={onRepeat}>
               <div class="key-align-right">
-                Ctrl R
+                Ctrl R&nbsp;
               </div>
             </Key>
         </div>
@@ -433,7 +446,9 @@ export function hide() {
             {/if}
           </Key>{/each}<Key size="x1" keyName="Backspace" on:start={onKeyStart} on:end={onKeyEnd} on:repeat={onRepeat}>
             <div class="key-align-right">
-                <img class="icon-delete" src={keyDelete.default} alt="">
+              <svg class="icon" aria-hidden="true">
+                <use xlink:href="#icon-jianpanshanchu"></use>
+              </svg>
             </div>
           </Key>
         <!-- backspace end -->
@@ -458,8 +473,8 @@ export function hide() {
               </div>
               {/if}
             </Key>{/each}<Key size="x1" keyName="Escape"  on:start={onKeyStart} on:end={onKeyEnd} on:repeat={onRepeat}>
-              <div class="key-align-left">
-                  Esc
+              <div class="key-align-right">
+                  Esc&nbsp;
               </div>
             </Key>
         </div>
@@ -468,17 +483,20 @@ export function hide() {
             <Key size="x2" on:start={shiftStart} on:end={shiftEnd} on:longPress={longPressShift} on:repeat={onRepeat} keyName="ShiftLeft">
                 <div class="key-align-left">
                     <div class={leftShiftLockClass}></div>
-                    <img class="icon-shift" src={keyShift.default} alt="">
+                    <svg class="icon" aria-hidden="true">
+                      <use xlink:href="#icon-jianpan-shift"></use>
+                    </svg>
                 </div>
             </Key>{#each NumberKeyMap[2] as key, keyIndex}
             <Key on:start={onKeyStart} on:end={onKeyEnd} on:repeat={onRepeat} keyName={key}>
               {key.title}
-            </Key>{/each}<Key size="x2" on:start={shiftStart} on:end={shiftEnd} on:longPress={longPressShift} on:repeat={onRepeat} keyName="ShiftRight" >
+            </Key>{/each}<Key size="x2" on:end={switchZhOrEn} keyName={ switchKeyboardText }>
               <div class="key-align-right">
-                  <div class={rightShiftLockClass}></div>
-                  <img class="icon-shift" src={keyShift.default} alt="">
+                <div class="keyboard-lan">
+                  { switchKeyboardText }&nbsp;
+                </div>
               </div>
-            </Key>
+          </Key>
         </div>
         <!-- number row 4 -->
         <div class="row">
@@ -499,7 +517,7 @@ export function hide() {
               Alt L
             </Key><Key size="x2" keyName="ControlRight" on:start={onKeyStart} on:end={onKeyEnd} on:repeat={onRepeat}>
                 <div class="key-align-right">
-                    Ctrl L
+                    Ctrl L&nbsp;
                 </div>
             </Key>
         </div>
@@ -509,6 +527,13 @@ export function hide() {
 </div>
 <style lang="scss" global>
 @import './scss/keyboard.scss';
+.icon {
+  width: 1em;
+  height: 1em;
+  vertical-align: -0.15em;
+  fill: currentColor;
+  overflow: hidden;
+}
 .simple-input-method {
     width: 90%;
     position: absolute;

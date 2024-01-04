@@ -1,6 +1,7 @@
 // polyfill
 import 'core-js/stable/symbol';
 import './components/keyboard/js/simple-input-method'
+import './iconfont/iconfont'
 
 import { 
     Joystick,
