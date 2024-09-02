@@ -53,8 +53,8 @@ this.joystick = new Joystick({
     // Option，larksr object，create with larksr websdk
     // If set auto send operate command to cloud, or use callback joystickstart joystickmove joystickend.
     // npm https://www.npmjs.com/package/larksr_websdk
-    // doc https://github.com/pingxingyun/lark_sr_websdk_demos
-    // demos https://pingxingyun.github.io/webclient_sdk/
+    // doc https://github.com/ParaverseTechnology/lark_sr_websdk_demos
+    // demos https://ParaverseTechnology.github.io/webclient_sdk/
     larksr: this.larksr,
 
     // Option subType  1 wasd  2 updownleftright 3 joystick 0 none

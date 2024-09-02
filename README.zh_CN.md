@@ -47,8 +47,8 @@ this.joystick = new Joystick({
     // 可选项，larksr 对象，由 larksr websdk 创建出来
     // 传入后自动发送对应的按键给云端。如果不传入，应手动处理事件，如 joystickstart joystickmove joystickend
     // npm https://www.npmjs.com/package/larksr_websdk
-    // doc https://github.com/pingxingyun/lark_sr_websdk_demos
-    // demos https://pingxingyun.github.io/webclient_sdk/
+    // doc https://github.com/ParaverseTechnology/lark_sr_websdk_demos
+    // demos https://paraversetechnology.github.io/webclient_sdk/
     larksr: this.larksr,
 
     //  可选项 subType  1 wasd  2 updownleftright 3 joystick 0 none

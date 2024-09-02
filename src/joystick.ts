@@ -10,8 +10,8 @@ export interface IJoystickConfig {
      * 可选项，larksr 对象，由 larksr websdk 创建出来
      * 传入后自动发送对应的按键给云端。如果不传入，应手动处理事件，如 joystickstart joystickmove joystickend
      * larksr npm https://www.npmjs.com/package/larksr_websdk
-     * larksr doc https://github.com/pingxingyun/lark_sr_websdk_demos
-     * larksr demos https://pingxingyun.github.io/webclient_sdk/
+     * larksr doc https://github.com/ParaverseTechnology/lark_sr_websdk_demos
+     * larksr demos https://paraversetechnology.github.io/webclient_sdk/
      */
     larksr?: any,
 
@@ -119,8 +119,8 @@ class Joystick {
      * larksr 对象，由 larksr websdk 创建出来
      * 传入后自动发送对应的按键给云端。如果不传入，应手动处理事件，如 joystickstart joystickmove joystickend
      * larksr npm https://www.npmjs.com/package/larksr_websdk
-     * larksr doc https://github.com/pingxingyun/lark_sr_websdk_demos
-     * larksr demos https://pingxingyun.github.io/webclient_sdk/
+     * larksr doc https://github.com/ParaverseTechnology/lark_sr_websdk_demos
+     * larksr demos https://paraversetechnology.github.io/webclient_sdk/
      */
     public set larksr(larksr: any) {
         this.joystick.$set({'larksr': larksr});

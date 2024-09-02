@@ -41,7 +41,13 @@ $: rightShiftLockClass = shiftLock ? "shiftlock shiftlock-lock shiftlock-right" 
 $: keybaordClass = theme==='light'?'keyboard light':'keyboard dark';
 
 onMount(async () => {
-  resize();
+  if (Capabilities.os === 'iOS') {
+    window.setTimeout(() => {
+      resize();
+    }, 200);
+  } else {
+    resize();
+  }
   simpleInputMethod.init('.test-input-method');
   if(larksr.params.language && !language) {
     language = larksr.params.language;

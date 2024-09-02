@@ -88,18 +88,19 @@ const testDeviceType = function() {
     //        debugInfo = gl.getExtension('WEBGL_debug_renderer_info');
     //
     //    console.log(gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL));
-    // })(); 
+    // })();
     const hasTouch = 'ontouchend' in document;
     const isSafari = ua.indexOf("safari") != -1 && ua.indexOf("version") != -1;
     const isIphone = ua.indexOf("iphone") != -1;
-    const isIpad = ua.indexOf("ipad") != -1;
+    const isIpad = ua.indexOf("ipad") != -1 || (ua.indexOf("mac") != -1 && navigator.maxTouchPoints > 1);
     return isMobile || isAndroid || (isSafari && hasTouch) || isIphone || isIpad;
 };
 const testOSType = function() {
-    const u = navigator.userAgent; 
+    const u = navigator.userAgent;
+    const ua = navigator.userAgent.toLowerCase();
     if (u.indexOf('Android') > -1 || u.indexOf('Adr') > -1) {
         return 'Android';
-    } else if (u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/) || (u.indexOf('Safari') != -1 && u.indexOf("Version") != -1 && 'ontouchend' in document)) {
+    } else if (u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/) || (u.indexOf('Safari') != -1 && u.indexOf("Version") != -1 && 'ontouchend' in document) || ua.indexOf("ipad") != -1 || (ua.indexOf("mac") != -1 && navigator.maxTouchPoints > 1)) {
         return 'iOS';
     } else if (u.match(/macintosh|mac os x/i)) {
         return 'Mac OS';
